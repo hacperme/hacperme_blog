@@ -7,7 +7,7 @@ tags:
     - 高考
 categories:
     - 生活
-draft: true
+draft: false
 
 description: "" # 文章描述，与搜索优化相关
 summary: "" # 文章简单描述，会展示在主页

@@ -1,12 +1,13 @@
 ---
 title: "关于"
-date: 2023-03-04T19:33:26+08:00
+date: 2015-06-14T23:20:30+08:00
 lastmod: 2023-03-04T19:33:26+08:00
 author: ["hacper"]
 draft: false
 hidemeta: true
 showbreadcrumbs: false
 showToc: false
+searchHidden: true
 ---
 
 ### 我是谁？
@@ -24,6 +25,7 @@ Hi，我是 **hacper**, 一个喜欢和追逐新事物的人。
 
 ### 站点历史:
 
+- 20123年03月4日： 弃用WordPress, 拥抱 [Hugo](https://gohugo.io/)。
 - 2018年01月21日： 启用域名：hacperme.com,并开启域名邮箱。
 - 2018年01月21日： 使用Sirius Lite主题。
 - 2018年01月03日： 博客迁移到腾讯云香港VPS； 绑定域名huse.photo； 注册ssl证书，站点启用HTTPS加密保护； WordPress升级到 4.9.2。

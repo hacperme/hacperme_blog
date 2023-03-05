@@ -1,0 +1,46 @@
+# Sample workflow for building and deploying a Hugo site to GitHub Pages
+name: Deploy Hugo site to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+
+## A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Setup ssh keys
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: |
+            ${{ secrets.BLOG_DEPLOY_KEY }}
+      - name: Scan public keys
+        run: |
+          ssh-keyscan ${{secrets.RSYNC_HOSTNAME}} >> ~/.ssh/known_hosts
+      - name: Deploy to VPS
+        run: |
+          rsync -av --delete public/* ${{secrets.RSYNC_USERNAME}}@${{secrets.RSYNC_HOSTNAME}}:${{ secrets.BLOG_DEPLOY_PATH }} --rsync-path="sudo rsync" --owner --group --chown=www:www

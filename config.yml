@@ -124,8 +124,8 @@ markup:
     noClasses: false
     # anchorLineNos: true
     # codeFences: true
-    # guessSyntax: true
-    # lineNos: true
+    guessSyntax: true
+    lineNos: true
     # style: monokai
 
 outputs:

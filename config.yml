@@ -3,6 +3,7 @@ title: Hacper's Blog
 paginate: 5
 theme: PaperMod
 
+hasCJKLanguage: true
 languageCode: zh
 defaultContentLanguage: zh
 
@@ -10,6 +11,8 @@ enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
+
+enableEmoji: true
 
 googleAnalytics: G-W3YJ286Z4E
 

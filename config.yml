@@ -63,7 +63,7 @@ params:
   ShowLastMod: true #显示文章更新时间
 
   UseHugoToc: true
-  disableSpecial1stPost: false
+  disableSpecial1stPost: true
   disableScrollToTop: false
   comments: true
   hidemeta: false

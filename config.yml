@@ -3,6 +3,7 @@ title: Hacper's Blog
 paginate: 5
 theme: PaperMod
 
+hasCJKLanguage: true
 languageCode: zh
 defaultContentLanguage: zh
 
@@ -10,6 +11,8 @@ enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
+
+enableEmoji: true
 
 googleAnalytics: G-W3YJ286Z4E
 
@@ -63,7 +66,7 @@ params:
   ShowLastMod: true #显示文章更新时间
 
   UseHugoToc: true
-  disableSpecial1stPost: false
+  disableSpecial1stPost: true
   disableScrollToTop: false
   comments: true
   hidemeta: false
@@ -124,8 +127,8 @@ markup:
     noClasses: false
     # anchorLineNos: true
     # codeFences: true
-    # guessSyntax: true
-    # lineNos: true
+    guessSyntax: true
+    lineNos: true
     # style: monokai
 
 outputs:

@@ -1,6 +1,6 @@
-baseURL: "https://blog.hacperme.com/"
+baseURL: "https://hacperme.com/"
 title: Hacper's Blog
-paginate: 5
+paginate: 10
 theme: PaperMod
 
 hasCJKLanguage: true

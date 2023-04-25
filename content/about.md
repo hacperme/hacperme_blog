@@ -1,7 +1,7 @@
 ---
 title: "关于"
 date: 2015-06-14T23:20:30+08:00
-lastmod: 2023-03-04T19:33:26+08:00
+lastmod: 2023-04-26T19:33:26+08:00
 author: ["hacper"]
 draft: false
 hidemeta: true
@@ -10,22 +10,24 @@ showToc: false
 searchHidden: true
 ---
 
-### 我是谁？
-Hi，我是 **hacper**, 一个喜欢和追逐新事物的人。
+一名深漂码农，网络代号 "hacper"，现从事嵌入式相关软件开发工作(主要忙于修 bug 和写 bug)。
 
-**最好的选择，莫过于投资自己，而写作是其中之一。**
+在互联网上圈了一块地，闲暇之余，记录一下自己的生活、思考和学习笔记。人生短暂而渺小，在这个广袤的互联网世界中，希望能够通过这块自留地留下一点自己存在的痕迹。
 
-所以啊，在互联网上圈了一块地，通过文字的方式精心耕作，播种（记录）自己的生活和思考。
 
-一年，三年，十年，来到这块土地的人将会看到它的成长和富饶。
+### 联系我
 
----
+[![blog](https://img.shields.io/badge/Blog-ffffff.svg?&style=for-the-badge&logo=hugo&logoColor=green)](https://hacperme.com/)
+
+[![github](https://img.shields.io/badge/Github-ffffff.svg?&style=for-the-badge&logo=github&logoColor=black)](https://github.com/hacperme/)
+
+[![公众号](https://img.shields.io/badge/WeChat-ffffff.svg?&style=for-the-badge&logo=WeChat&logoColor=green)](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/qrcode_for_gh_b1444a13ac67_258.4g56jp6fs4y0.jpg)
 
 
 
 ### 站点历史:
 
-- 20123年03月4日： 弃用WordPress, 拥抱 [Hugo](https://gohugo.io/)。
+- 2023年03月4日： 弃用WordPress, 拥抱 [Hugo](https://gohugo.io/)。
 - 2018年01月21日： 启用域名：hacperme.com,并开启域名邮箱。
 - 2018年01月21日： 使用Sirius Lite主题。
 - 2018年01月03日： 博客迁移到腾讯云香港VPS； 绑定域名huse.photo； 注册ssl证书，站点启用HTTPS加密保护； WordPress升级到 4.9.2。

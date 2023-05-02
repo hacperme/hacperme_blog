@@ -47,8 +47,8 @@ menu:
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: Hacper's Blog
-  description: "Hacper 的个人网站"
-  keywords: [Blog]
+  description: "Hacper 的个人网站，记录自己的生活、思考和学习。"
+  keywords: [Blog, hacper, hacperme, 博客, hacper的博客, hacper的个人网站]
   author: Hacper
   DateFormat: "2006-01-02"
   defaultTheme: auto # dark, light

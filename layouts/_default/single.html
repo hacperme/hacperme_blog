@@ -18,6 +18,12 @@
       {{- partial "translation_list.html" . -}}
       {{- partial "edit_post.html" . -}}
       {{- partial "post_canonical.html" . -}}
+      <!-- 文章更新日期 -->
+      {{if .Site.Params.ShowLastMod}}
+      <div class="meta-item">&nbsp·&nbsp
+        <span id="Lastmod-time">更新于{{ .Lastmod.Year }}-{{printf "%02d" .Lastmod.Month }}-{{printf "%02d" .Lastmod.Day }}</span>
+      </div>
+      {{- end }}
       <!-- busuanzi -->
       {{ if .Site.Params.busuanzi.enable -}}
       <div  class="meta-item">&nbsp·&nbsp

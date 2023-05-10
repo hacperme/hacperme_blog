@@ -23,11 +23,6 @@ disableShare: true # 底部不显示分享栏
 searchHidden: false # 该页面可以被搜索到
 showbreadcrumbs: true #顶部显示当前路径
 # mermaid: true
-# cover:
-#     image: ""
-#     caption: ""
-#     alt: ""
-#     relative: false
 
 ---
 

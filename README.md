@@ -18,6 +18,8 @@ My  personal website.
 
    ```bash
    hugo new posts/draft/xxx.md
+   # 指定图集模板
+   hugo new --kind gallery posts/draft/xxx.md
    ```
 
 3. 添加图集

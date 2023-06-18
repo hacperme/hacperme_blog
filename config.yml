@@ -12,6 +12,8 @@ buildDrafts: false
 buildFuture: false
 buildExpired: false
 
+enableGitInfo: true
+
 enableEmoji: true
 
 googleAnalytics: G-W3YJ286Z4E
@@ -62,7 +64,7 @@ params:
   ShowCodeCopyButtons: true
   ShowWordCount: true
   ShowRssButtonInSectionTermList: true
-  ShowFullTextinRSS: true
+  ShowFullTextinRSS: false
   ShowLastMod: true #显示文章更新时间
 
   UseHugoToc: true

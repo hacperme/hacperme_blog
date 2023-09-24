@@ -146,5 +146,5 @@ bin/target/
 
 烧录使用 SWDownloader 工具打开 quectel_skylark_pm802_standard_AB_1G.blf，先点击左上角绿色的指示灯按钮，复位模组即可进行固件烧写。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230426140707714.5zgpr7hxqyw0.webp)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230426140707714.5zgpr7hxqyw0.webp)
 

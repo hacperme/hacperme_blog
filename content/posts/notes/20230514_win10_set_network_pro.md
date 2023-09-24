@@ -33,7 +33,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 其实是通过修改路由的跃点数来修改网络的优先级的，跃点越小，优先级越高，按照下图，在控制面版将外网的跃点数修改到小于内网的跃点数，优先使用外网。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image.41b7n08kiyi0.webp)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.41b7n08kiyi0.webp)
 
 内网访问，再添加固定路由：
 

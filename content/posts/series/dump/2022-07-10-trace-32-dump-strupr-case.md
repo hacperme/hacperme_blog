@@ -26,16 +26,16 @@ tags:
 
 打开 trace 32，加载设备死机时 dump 文件， 首先开任务调用栈，看死机时的停留位置。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image.bty9ryslgd.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.bty9ryslgd.png)
 
 死机正在调用的一个函数为strupr，对应的汇编代码为 strb r3,\[r1\]，这种情况，按照以往经验可以猜测大概率是内存读写问题。为了避免误判，还是需要做一下常规异常排查。
 
 1. 查看任务列表，按照任务状态排序，查看ready状态的任务是否有看门狗喂狗任务，排除高优先级任务占用cpu，喂狗任务无法及时得到调度而死机的情况，从下面的截图看呢，喂狗任务正常挂起了，所以不是这个原因
 
-  ![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image.7i6s6qfuzaw0.png)
+  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.7i6s6qfuzaw0.png)
 2. 查看任务栈，粗略看下有没有栈溢出的情况，排除是否是栈溢出导致内存访问问题。
 
-  ![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image.6j9ebcbbjn00.png)
+  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.6j9ebcbbjn00.png)
 
   可以看到，download 任务的任务栈还有 0x2c38 字节未使用，任务栈是够用的，可以排除栈溢出问题。
 

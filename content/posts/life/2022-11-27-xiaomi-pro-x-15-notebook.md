@@ -18,8 +18,8 @@ tags:
 
 后面自己瞎折腾，怀疑是显卡驱动的问题，也算是运气好，居然修好了。在设备管理器查看显卡驱动，发现显卡驱动显示未启动 igfxn 设备。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/1.2ifq8fzpiuw0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/1.2ifq8fzpiuw0.png)
 
 然后尝试删除设备，已经黑屏了，只能强制重启，重新开机之后可以看到 igfxn 设备启动正常，熄屏之后无法点亮屏幕的问题也消失了。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/2.2h5jrnqhska0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/2.2h5jrnqhska0.png)

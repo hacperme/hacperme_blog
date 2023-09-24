@@ -31,7 +31,7 @@ showbreadcrumbs: true #顶部显示当前路径
 ---
 
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/Snipaste_2023-04-28_00-29-48.6k5ozj3ue8s0.webp)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Snipaste_2023-04-28_00-29-48.6k5ozj3ue8s0.webp)
 
 2020年8月15日，与杨老大游零陵古城看到萧锦忠这首闲居即兴，颇有感触。不知道受什么影响，心里时不时也曾向往这样的生活，平凡人生，简单生活，知足常乐，或许躺平也是一种幸福吧。
 

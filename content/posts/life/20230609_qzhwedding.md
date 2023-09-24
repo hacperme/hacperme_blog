@@ -29,26 +29,26 @@ showbreadcrumbs: true #顶部显示当前路径
 
 {{< load-photoswipe >}}
 
-{{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235733.62cebw82x4s0.webp" >}}
+{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235733.62cebw82x4s0.webp" >}}
 
 {{< gallery >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235629.4621p9mrah40.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235629.4621p9mrah40.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235608.66em7s1na600.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235608.66em7s1na600.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235636.47syrn3udoo0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235636.47syrn3udoo0.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235643.48nvsz6xzdk0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235643.48nvsz6xzdk0.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235650.502e71scu9o0.webp" caption-position="none" >}}
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235739.2c9ldz4y1p8g.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235650.502e71scu9o0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235739.2c9ldz4y1p8g.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235733.62cebw82x4s0.webp" caption-position="none" >}}
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235712.4gbkz5m7emi0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235733.62cebw82x4s0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235712.4gbkz5m7emi0.webp" caption-position="none" >}}
 
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235723.4lst0ol44qs0.webp" caption-position="none" >}}
-    {{< figure link="https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235656.1w2oqml0r2bk.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235723.4lst0ol44qs0.webp" caption-position="none" >}}
+    {{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/微信图片_20230618235656.1w2oqml0r2bk.webp" caption-position="none" >}}
 
 
 {{< /gallery >}}

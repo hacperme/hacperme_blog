@@ -60,7 +60,7 @@ mermaid: true
 
 2. 屏幕复位
 
-   ![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230303193117129-1678012392567.5yeiepfpb2o0.png)
+   ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230303193117129-1678012392567.5yeiepfpb2o0.png)
 
    ```c
    ql_gpio_set_level(AIP_SPI_RES, LVL_HIGH);
@@ -139,11 +139,11 @@ mermaid: true
 
    三线spi接口与4线spi接口的区别，4线spi多了一个数据命令信号脚，通过这个脚拉高拉低来区分发送的是命令还是数据。
 
-   ![image-20230303195143919](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230303195143919.wjn128em0qo.png)
+   ![image-20230303195143919](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230303195143919.wjn128em0qo.png)
 
    
 
-   ![image-20230303195214629](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230303195214629.4n0thy27f9g0.png)
+   ![image-20230303195214629](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230303195214629.4n0thy27f9g0.png)
 
    
 
@@ -170,7 +170,7 @@ mermaid: true
 
    先写地址，后写数据
 
-   ![image-20230303205453013](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230303205453013.21ij5i9jgh0g.png)
+   ![image-20230303205453013](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230303205453013.21ij5i9jgh0g.png)
 
    ```c
    // 写ddram 到屏幕显示
@@ -198,7 +198,7 @@ mermaid: true
 
 ## 逻辑表
 
-![image-20230303205942238](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/image-20230303205942238.323e0y32zxo0.png)
+![image-20230303205942238](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230303205942238.323e0y32zxo0.png)
 
 逻辑表与ddrm的对应关系：
 

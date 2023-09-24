@@ -165,29 +165,29 @@ index 6f07124..f99bc25 100644
 
 提取函数名、起始地址和函数大小，有这三个信息之后就可以根据内存地址找到对应的函数了。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.5zw699c7x7w0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.5zw699c7x7w0.png)
 
 
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.7gdw7w6kjy80.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.7gdw7w6kjy80.png)
 
 ## 结果对比
 
 修改之后，output_all_task.txt 解析任务栈中函数调用关系的结果中，补充了app侧的函数调用。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.16fe13kbvn0g.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.16fe13kbvn0g.png)
 
 
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.6ovxrht33bk0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.6ovxrht33bk0.png)
 
 output_osa_mem.txt 中也增加了在app侧申请内存的函数的显示。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.natwx27pd40.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.natwx27pd40.png)
 
 
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/20210507/xxx.3ktys22a8mc0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3ktys22a8mc0.png)
 
 ## Quec_Crane_Dump_Memory_Parse_Tool 工具的使用场景
 

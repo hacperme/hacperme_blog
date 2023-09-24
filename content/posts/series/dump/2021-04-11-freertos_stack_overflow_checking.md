@@ -348,11 +348,11 @@ EC200U模组（Unisoc 8910Dm）的open sdk使用的RTOS是FreeRTOS，模组死�
 
 通过trace 32加载dump文件，首先看到死机前函数栈帧里有调用vApplicationStackOverflowHook函数，说明kernel在任务上下文切换时检测到了栈溢出问题。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled.3ljv1vf7grq0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled.3ljv1vf7grq0.png)
 
 查看线程列表，正在执行的task是rm_app_start这个线程，也就是在这个任务死机了。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-1.vqzir71hzpc.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-1.vqzir71hzpc.png)
 
 接着查看rm_app_start的任务控制块数据，其中有三个数据需要关注：
 
@@ -368,35 +368,35 @@ TCB+stack紧挨着，所以知道了TCB的起始地址也就知道了栈的结�
 
 3. 栈的起始地址 pxStack → 0x80bf74a8
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-2.3jp3qqf5xdc0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-2.3jp3qqf5xdc0.png)
 
 可以使用trace 32查看这些地址的内存数据，比如，先来看TCB的起始地址→0x80bf78b8的数据，下图右箭头所指的地方就是TCB的起始地址，我们可以看到开始的4个字节数据是0x80bf7504，也就是存储着pxTopOfStack的地址。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-3.3bfxtptmgl80.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-3.3bfxtptmgl80.png)
 
 接着再看栈的最低地址0x80bf74a8的数据，通过前面栈溢出的检测机制介绍可以知道，栈在初始化的时候会填充默认值0xA5，然后kernel在任务上下文切换的时候会去比较栈起始地址开始的16个字节是不是保持着默认值0xA5，如果初始值被篡改，则会触发vApplicationStackOverflowHook。从下图的数据来看，栈最低地址0x80bf74a8的数据已经被破坏了。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-4.2hud1c5k2rs0.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-4.2hud1c5k2rs0.png)
 
 我们再找一个正常的task做对比，也就是下图的IDLE task。同样的方法，先查看TCB数据，找到栈的起始地址0x80992500, 栈的结束地址0x809934f8，栈顶地址0x8099342c。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-5.12q9ltcipo8g.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-5.12q9ltcipo8g.png)
 
 查看栈的起始地址0x80992500的内存数据，开始的16个字节都是0xA5，说明栈空间够，没有溢出，且还有一段未曾使用的空间。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-6.mjuoih6h8hc.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-6.mjuoih6h8hc.png)
 
 再看栈顶地址0x8099342c的数据，在0x8099342c之上有一段不是0xA5的数据，说明曾经有发生过函数调用，且成功返回了。栈保存的函数调用信息在出栈之后并不会主动清除，只会在下次入栈的时候数据覆盖，由此我们也可以通过这个信息查看这个任务曾经调用过什么函数。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-7.v4jbtnlhacw.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-7.v4jbtnlhacw.png)
 
 从栈顶到栈底这段空间保存在函数调用的信息，我们可以使用trace 32来解析函数调用关系。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-8.5d2amkqv3u80.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-8.5d2amkqv3u80.png)
 
 在栈顶与栈底这段内存数据里，我先找到其中的函数地址，再通过设置断点的方式根据地址找到函数名。比如下图依次找到两个程序地址：0x6014B6CF 和 0x6014B651，通过设置断点查到对应的函数名prvIdleTask和xTaskResumeAll，再根据栈的增长方向可以判断是 prvIdleTask  调用→ xTaskResumeAll。
 
-![](https://cdn.staticaly.com/gh/hacperme/picx_hosting@master/images/qns/Untitled-9.67ablvydo580.png)
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/images/qns/Untitled-9.67ablvydo580.png)
 
 把栈空间所有程序地址找出来，按照同样的方法就能找到这个任务的函数调用痕迹了：
 

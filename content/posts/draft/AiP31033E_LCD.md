@@ -552,8 +552,5 @@ int Hal_lcd_display_font(ds_font_e font, int on)
 
 ```
 
-
-
-
-
 ## 界面绘制
+

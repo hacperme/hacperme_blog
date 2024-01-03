@@ -29,7 +29,7 @@ showbreadcrumbs: true #顶部显示当前路径
 ---
 
 
-由于项目需要，前几天在调整 NXP RW612 MCU wifi SDK 的构建系统，由原来的 cmake+mingw+a+make+armgcc 调整为 cmake+kcongfig+ninja+mingw+armcc。构建系统调整完成之后，发现烧录固件设备无法启动，而未调整之前编译出来的固件是正常的。
+由于项目需要，前几天在调整 NXP RW612 MCU wifi SDK 的构建系统，由原来的 cmake+mingw+make+armgcc 调整为 cmake+kcongfig+ninja+mingw+armcc。构建系统调整完成之后，发现烧录固件设备无法启动，而未调整之前编译出来的固件是正常的。
 
 ## 查找原因
 

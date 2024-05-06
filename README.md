@@ -1,12 +1,21 @@
-# hacperme_blog
+# hacperme blog
 
 My  personal website.
 
-
-
 ## 使用方法
 
-1. 本地渲染
+1. 同步仓库
+
+   ```bash
+   git clone --recurse-submodules git@github.com:hacperme/hacperme_blog.git
+   
+   # 更新 submodule
+   git submodule update --init --recursive
+   ```
+
+   
+
+2. 本地渲染
 
    ```bash
    hugo server --disableFastRender -D
@@ -14,7 +23,7 @@ My  personal website.
 
    Web Server is available at http://localhost:1313/
 
-2. 添加新文章
+3. 添加新文章
 
    ```bash
    hugo new posts/draft/xxx.md
@@ -22,7 +31,7 @@ My  personal website.
    hugo new --kind gallery posts/draft/xxx.md
    ```
 
-3. 添加图集
+4. 添加图集
 
    使用 shortcode 的方式
 
@@ -77,7 +86,7 @@ My  personal website.
    {{< gallery hover-effect="shrink" >}} ...
    ```
 
-4. 引用 bilibili 视频
+5. 引用 bilibili 视频
 
    ```bash
    {{< bilibili bvid >}}   

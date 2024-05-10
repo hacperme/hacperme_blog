@@ -1,7 +1,7 @@
 ---
 title: "flowerss bot 安装与迁移"
 date: 2023-12-11T00:08:42+08:00
-lastmod: 2023-12-11T00:08:42+08:00
+lastmod: 2024-05-07T00:08:42+08:00
 author: ["hacper"]
 tags:
     - flowerss
@@ -42,7 +42,7 @@ wget -O ~/flowerss/config.yml \
 vim ~/flowerss/config.yml
 
 # 运行
-docker run -d -v ~/flowerss:/root/.flowerss indes/flowerss-bot
+docker run -d --restart=always -v ~/flowerss:/root/.flowerss indes/flowerss-bot
 ```
 
 注意：
@@ -56,7 +56,7 @@ sqlite:
 
 ## 备份 & 迁移
 
-只要备份 ~/flowerss 这个目录，迁移到新的主机也只需要复制 ~/flowerss 下的文件，执行 `docker run -d -v ~/flowerss:/root/.flowerss indes/flowerss-bot`安装即可。
+只要备份 ~/flowerss 这个目录，迁移到新的主机也只需要复制 ~/flowerss 下的文件，执行 `docker run -d --restart=always -v ~/flowerss:/root/.flowerss indes/flowerss-bot`安装即可。
 
 ## 链接
 

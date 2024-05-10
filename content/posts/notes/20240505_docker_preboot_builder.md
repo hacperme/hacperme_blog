@@ -25,7 +25,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 ---
 
-ASR1606/ASR1601 的 preboot 代码需要在 Linux 环境下编译，通常使用 VMware 或者 VirtualBox 软件创建一个 Linux 虚拟机，在虚拟机中做交叉编译。但 preboot 不是那种需要经常编译的代码，完全可以将 preboot 的编译环境制作成 docker 镜像，与虚拟机相比，docker 的启动速度更快，占用资源更少，需要用到的时候创建一个 docker 容器来编译 preboot，非常适合用来做这类偶尔需要用一下的场景。
+ASR1606/ASR1603 的 preboot 代码需要在 Linux 环境下编译，通常使用 VMware 或者 VirtualBox 软件创建一个 Linux 虚拟机，在虚拟机中做交叉编译。但 preboot 不是那种需要经常编译的代码，完全可以将 preboot 的编译环境制作成 docker 镜像，与虚拟机相比，docker 的启动速度更快，占用资源更少，需要用到的时候创建一个 docker 容器来编译 preboot，非常适合用来做这类偶尔需要用一下的场景。
 
 
 

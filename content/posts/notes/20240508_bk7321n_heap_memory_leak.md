@@ -1040,6 +1040,116 @@ int ali_iot_close(custom_func_ch_id_e func_id, void *hdl)
 ```
 rtos_delete_thread(mqtt_client->task); 传参不对，rtos_delete_thread(&mqtt_client->task);之后正常。
 
+## heap 内存写越界案例
+
+free 的时候检测到内存块被破坏
+
+```bash
+
+lyy debug wlan_event_handler 676
+mem corrupt,block:0x422ef8, blocksize:24, xWantedSize:4, caller:0x34747
+dump block:
+00000000:  00 00 00 00 18 00 00 00  ........
+00000008:  04 00 00 00 47 47 03 00  ....GG..
+00000010:  48 54 54 50 2F 31 2E 30  HTTP/1.0
+
+
+```
+调用者申请了4字节内存空间，分配的内存块大小是24字节，减去头部16字节，后面填充了4字节的0xfd,从dump的内存数据来看，填充的数据都被覆盖完了, 通过 caller:0x34747 查找代码位置
+
+```bash
+FC41D/beken_freertos_sdk_release-SDK_3.0.21 on  Iotbranch [!?⇡] 
+❯ ./toolchain/gcc-arm-none-eabi-5_4-2016q3/bin/arm-none-eabi-addr2line -e quectel_build/Release/FC41DAAR11A05_RYY_V01_/Debug/beken7231_bsp.elf  -f 0x34747
+fs_open_custom
+/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/func/lwip_intf/lwip-2.0.2/src/apps/httpd/custom_fsdata.c:239
+
+```
+
+对应代码：
+
+```c
+int fs_open_custom(struct fs_file *file, const char *name)
+{
+    char *wifi_data="{\"aps\":[{\"ssid\":\"quectel\"},{\"ssid\":\"test234\"}]}";
+    int file_data_len = 0;
+    
+     /* this example only provides one file */
+     if (!strcmp(name, "/wifilist.html"))
+     {
+         /* initialize fs_file correctly */
+         memset(file, 0, sizeof(struct fs_file));
+         file_data_len = strlen((char *)CUSTOM_FSDATA_WIFILIST_HTML_HEADER) + strlen(wifi_data) +2;
+         file->pextension = malloc(sizeof(file_data_len));
+         if (file->pextension != NULL)
+         {
+            memset(file->pextension, 0, file_data_len);
+            file_data_len = snprintf(file->pextension, file_data_len - 1, "%s%s", (char *)CUSTOM_FSDATA_WIFILIST_HTML_HEADER, wifi_data);
+        
+            file->data = (const char *)file->pextension;
+            file->len = file_data_len; /* don't send the trailing 0 */
+            file->index = file->len;
+            /* allow persisteng connections */
+            file->flags = FS_FILE_FLAGS_HEADER_INCLUDED;
+            return 1;
+         }
+     }
+     else if(!strcmp(name, "/index.html"))
+     {
+         char *sta_state_data = NULL;
+         uint32 uart_band = 9600;
+         uint8 ssid[33] = {0};
+         uint8 psk[64] = {0};
+
+         int apon = 0;
+         char *ap_state_data = NULL;
+
+         if (custom_fsdata_sta_state() == 1)
+         {
+             sta_state_data = CUSTOM_FSDATA_STA_CONNECTED;
+         }
+         else
+         {
+             sta_state_data = CUSTOM_FSDATA_STA_DISCONNECTED;
+         }
+
+         custom_sw_ap_cfg_get(apssid, appass, &apon);
+
+         if (apon == 1)
+         {
+             ap_state_data = "Up";
+         }
+         else
+         {
+             ap_state_data = "Down";
+         }
+
+         custom_config_uart_braud_get(&uart_band);
+
+         custom_sta_cfg_get(ssid, psk);
+         /* initialize fs_file correctly */
+         memset(file, 0, sizeof(struct fs_file));
+         file_data_len = strlen((char *)CUSTOM_FSDATA_INDEX_HTML_HEADER) + strlen((char *)CUSTOM_FSDATA_INDEX_HTML_FILE_FMT) + 10 /* for uart band */ + strlen((char *)ssid) + strlen(ap_state_data) + strlen(sta_state_data) + strlen((char *)apssid) + 1 /* \0 */;
+         file->pextension = malloc(sizeof(file_data_len));
+         if (file->pextension != NULL)
+         {
+            memset(file->pextension, 0, file_data_len);
+            file_data_len = snprintf(file->pextension, file_data_len - 1, (char *)CUSTOM_FSDATA_INDEX_HTML_FILE_FMT, (char *)CUSTOM_FSDATA_INDEX_HTML_HEADER, (char *)ssid, sta_state_data, (char *)apssid, ap_state_data, uart_band);
+        
+            file->data = (const char *)file->pextension;
+            file->len = file_data_len; /* don't send the trailing 0 */
+            file->index = file->len;
+            /* allow persisteng connections */
+            file->flags = FS_FILE_FLAGS_HEADER_INCLUDED;
+            return 1;
+         }
+     }
+     return 0;
+}
+```
+
+file->pextension = malloc(sizeof(file_data_len)); 传的参数传错了，sizeof(file_data_len) 是4字节，实际需要申请 file_data_len 字节，导致后面内存写越界了。
+
+
 ## freertos 的 heap4 怎么增加 heapinfo 调试信息？
 
 todo

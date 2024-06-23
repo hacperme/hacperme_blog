@@ -75,7 +75,7 @@ params:
   tocopen: false
   VisitCount: true
   busuanzi:
-        enable: true
+        enable: false
 
   mainSections:
     - posts

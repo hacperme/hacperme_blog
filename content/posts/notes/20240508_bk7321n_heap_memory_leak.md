@@ -1,17 +1,19 @@
 ---
-title: "bk7231n heap 内存泄漏分析"
-date: 2024-05-08T02:00:18+08:00
-lastmod: 2024-05-08T02:00:18+08:00
+title: "为 freertos 的 heap_4 动态内存分配方案增加 heap info 调试信息"
+date: 2024-06-23T02:00:18+08:00
+lastmod: 2024-06-23T02:00:18+08:00
 author: ["hacper"]
 tags:
     - bk7231n
+    - freertos
+    - c
 categories:
     - 笔记
 description: "" # 文章描述，与搜索优化相关
-summary: "" # 文章简单描述，会展示在主页
+summary: "为 freertos 的 heap_4 增加 heap info 调试信息，用于排查内存泄漏和内存越界问题" # 文章简单描述，会展示在主页
 # weight: # 输入1可以顶置文章，用来给文章展示排序，不填就默认按时间排序
 slug: ""
-draft: true # 是否为草稿
+draft: false # 是否为草稿
 comments: true
 showToc: true # 显示目录
 TocOpen: true # 自动展开目录
@@ -25,9 +27,643 @@ showbreadcrumbs: true #顶部显示当前路径
 ---
 
 
-## heap info
 
-mqtt 打开之前的 heap info
+
+## 如何为 freertos 的 heap_4 动态内存分配方案增加 heap info 调试信息？
+
+增加调试信息的目的是为了方便排查内存泄漏和内存越界问题，为了排查内存泄漏，需要记录每个内存块的申请者信息，以下是针对内存泄漏问题调试的修改。
+
+- 修改内存块头部的数据结构，增加字段记录内存申请者的信息和申请的内存大小。
+
+```c
+typedef struct A_BLOCK_LINK
+{
+    struct A_BLOCK_LINK * pxNextFreeBlock; /*<< The next free block in the list. */
+    size_t xBlockSize;                     /*<< The size of the free block. */
+    size_t xWantedSize;
+    void *caller;
+} BlockLink_t;
+
+```
+xWantedSize 和 caller 是新增的字段，分别用于记录内存分配时候的调用者信息和申请的内存大小。
+
+- 修改 pvPortMalloc 和 pvPortRealloc 的定义，传入参数增加 caller。
+
+```c
+void * pvPortMalloc( size_t xSize , void *caller) PRIVILEGED_FUNCTION;
+void * pvPortRealloc( void *p,
+                     size_t xSize, void *caller) PRIVILEGED_FUNCTION;
+```
+
+- 修改 prvHeapInit pvPortMalloc 的实现，增加记录 caller，增加新接口 show_heap_info 查看 heap 的内存使用情况。
+
+在 heap 初始化的时候增加 caller xWantedSize 的初始化。
+```c
+static void prvHeapInit( void ) /* PRIVILEGED_FUNCTION */
+{
+    BlockLink_t * pxFirstFreeBlock;
+    uint8_t * pucAlignedHeap;
+    size_t uxAddress;
+    size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
+
+    /* Ensure the heap starts on a correctly aligned boundary. */
+    uxAddress = ( size_t ) ucHeap;
+
+    if( ( uxAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
+    {
+        uxAddress += ( portBYTE_ALIGNMENT - 1 );
+        uxAddress &= ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+        xTotalHeapSize -= uxAddress - ( size_t ) ucHeap;
+    }
+
+    pucAlignedHeap = ( uint8_t * ) uxAddress;
+
+    /* xStart is used to hold a pointer to the first item in the list of free
+     * blocks.  The void cast is used to prevent compiler warnings. */
+    xStart.pxNextFreeBlock = ( void * ) pucAlignedHeap;
+    xStart.xBlockSize = ( size_t ) 0;
+    xStart.caller = NULL;
+    xStart.xWantedSize = 0;
+
+    /* pxEnd is used to mark the end of the list of free blocks and is inserted
+     * at the end of the heap space. */
+    uxAddress = ( ( size_t ) pucAlignedHeap ) + xTotalHeapSize;
+    uxAddress -= xHeapStructSize;
+    uxAddress &= ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+    pxEnd = ( void * ) uxAddress;
+    pxEnd->xBlockSize = 0;
+    pxEnd->caller = NULL;
+    pxEnd->pxNextFreeBlock = NULL;
+
+    /* To start with there is a single free block that is sized to take up the
+     * entire heap space, minus the space taken by pxEnd. */
+    pxFirstFreeBlock = ( void * ) pucAlignedHeap;
+    pxFirstFreeBlock->xBlockSize = uxAddress - ( size_t ) pxFirstFreeBlock;
+    pxFirstFreeBlock->xWantedSize = 0;
+    pxFirstFreeBlock->caller = NULL;
+    pxFirstFreeBlock->pxNextFreeBlock = pxEnd;
+
+    /* Only one block exists - and it covers the entire usable heap space. */
+    xMinimumEverFreeBytesRemaining = pxFirstFreeBlock->xBlockSize;
+    xFreeBytesRemaining = pxFirstFreeBlock->xBlockSize;
+}
+```
+
+
+在分配内存的时候，记录caller 和 xWantedSize 到内存卡的头部。
+```c
+void * pvPortMalloc( size_t xWantedSize , void * caller)
+{
+    BlockLink_t * pxBlock, * pxPreviousBlock, * pxNewBlockLink;
+    void * pvReturn = NULL;
+    size_t xAdditionalRequiredSize;
+    size_t _xWantedSize = xWantedSize;
+
+    vTaskSuspendAll();
+    {
+        /* If this is the first call to malloc then the heap will require
+         * initialisation to setup the list of free blocks. */
+        if( pxEnd == NULL )
+        {
+            prvHeapInit();
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        if( xWantedSize > 0 )
+        {
+            /* The wanted size must be increased so it can contain a BlockLink_t
+             * structure in addition to the requested amount of bytes. Some
+             * additional increment may also be needed for alignment. */
+            xAdditionalRequiredSize = xHeapStructSize  + portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK );
+
+            if( heapADD_WILL_OVERFLOW( xWantedSize, xAdditionalRequiredSize ) == 0 )
+            {
+                xWantedSize += xAdditionalRequiredSize;
+            }
+            else
+            {
+                xWantedSize = 0;
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        /* Check the block size we are trying to allocate is not so large that the
+         * top bit is set.  The top bit of the block size member of the BlockLink_t
+         * structure is used to determine who owns the block - the application or
+         * the kernel, so it must be free. */
+        if( heapBLOCK_SIZE_IS_VALID( xWantedSize ) != 0 )
+        {
+            if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
+            {
+                /* Traverse the list from the start (lowest address) block until
+                 * one of adequate size is found. */
+                pxPreviousBlock = &xStart;
+                pxBlock = xStart.pxNextFreeBlock;
+
+                while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != NULL ) )
+                {
+                    pxPreviousBlock = pxBlock;
+                    pxBlock = pxBlock->pxNextFreeBlock;
+                }
+
+                /* If the end marker was reached then a block of adequate size
+                 * was not found. */
+                if( pxBlock != pxEnd )
+                {
+                    /* Return the memory space pointed to - jumping over the
+                     * BlockLink_t structure at its start. */
+                    pvReturn = ( void * ) ( ( ( uint8_t * ) pxPreviousBlock->pxNextFreeBlock ) + xHeapStructSize );
+
+                    /* This block is being returned for use so must be taken out
+                     * of the list of free blocks. */
+                    pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
+
+                    /* If the block is larger than required it can be split into
+                     * two. */
+                    if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
+                    {
+                        /* This block is to be split into two.  Create a new
+                         * block following the number of bytes requested. The void
+                         * cast is used to prevent byte alignment warnings from the
+                         * compiler. */
+                        pxNewBlockLink = ( void * ) ( ( ( uint8_t * ) pxBlock ) + xWantedSize );
+                        configASSERT( ( ( ( size_t ) pxNewBlockLink ) & portBYTE_ALIGNMENT_MASK ) == 0 );
+
+                        /* Calculate the sizes of two blocks split from the
+                         * single block. */
+                        pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+                        pxNewBlockLink->xWantedSize = 0;
+                        pxNewBlockLink->caller = NULL;
+                        pxBlock->xBlockSize = xWantedSize;
+
+                        /* Insert the new block into the list of free blocks. */
+                        prvInsertBlockIntoFreeList( pxNewBlockLink );
+                    }
+                    else
+                    {
+                        mtCOVERAGE_TEST_MARKER();
+                    }
+
+                    
+
+                    xFreeBytesRemaining -= pxBlock->xBlockSize;
+                    
+
+                    if( xFreeBytesRemaining < xMinimumEverFreeBytesRemaining )
+                    {
+                        xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+                    }
+                    else
+                    {
+                        mtCOVERAGE_TEST_MARKER();
+                    }
+
+              
+                    pxBlock->xWantedSize = _xWantedSize;
+                    pxBlock->caller = caller;
+                    /* The block is being returned - it is allocated and owned
+                     * by the application and has no "next" block. */
+                    heapALLOCATE_BLOCK( pxBlock );
+                    pxBlock->pxNextFreeBlock = NULL;
+                    xNumberOfSuccessfulAllocations++;
+                }
+                else
+                {
+                    mtCOVERAGE_TEST_MARKER();
+                }
+            }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        traceMALLOC( pvReturn, xWantedSize );
+    }
+    xTaskResumeAll();
+
+    #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+    {
+        if( pvReturn == NULL )
+        {
+            vApplicationMallocFailedHook();
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+    }
+    #endif /* if ( configUSE_MALLOC_FAILED_HOOK == 1 ) */
+
+    configASSERT( ( ( ( size_t ) pvReturn ) & ( size_t ) portBYTE_ALIGNMENT_MASK ) == 0 );
+    return pvReturn;
+}
+
+void *pvPortRealloc(void *p,
+                    size_t xSize, void * caller)
+{
+    void *pv = NULL;
+    uint8_t *puc = (uint8_t *)p;
+    BlockLink_t *pxLink;
+
+    if (p == NULL)
+    {
+        return NULL;
+    }
+
+    puc -= xHeapStructSize;
+    pxLink = (void *)puc;
+
+    configASSERT(heapBLOCK_IS_ALLOCATED(pxLink) != 0);
+    configASSERT(pxLink->pxNextFreeBlock == NULL);
+
+    pv = pvPortMalloc(xSize, caller);
+    if (pv == NULL)
+    {
+        return NULL;
+    }
+    memcpy(pv, p, pxLink->xWantedSize);
+    vPortFree(p);
+
+    return pv;   
+}
+
+```
+
+遍历 heap 所有的内存块，打印出其调用者、申请内存大小、是已分配的内存块还是空闲的内存块，利用这些信息排查内存泄漏。
+
+```c
+void show_heap_info(void)
+{
+    BlockLink_t * pxLink = NULL;
+    uint8_t * pucAlignedHeap;
+    size_t uxAddress;
+    size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
+
+    vTaskSuspendAll();
+    uxAddress = ( size_t ) ucHeap;
+
+    if( ( uxAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
+    {
+        uxAddress += ( portBYTE_ALIGNMENT - 1 );
+        uxAddress &= ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+        xTotalHeapSize -= uxAddress - ( size_t ) ucHeap;
+    }
+
+    pucAlignedHeap = ( uint8_t * ) uxAddress;
+
+    pxLink = (BlockLink_t *)pucAlignedHeap;
+
+    printf("\r\naddress: 0x%p\r\nsize: %d\r\navail: %d\r\npool_start: 0x%p\r\npool_end: 0x%p\r\n",
+           ucHeap, xTotalHeapSize, xFreeBytesRemaining, pucAlignedHeap, pxEnd);
+
+    printf("state,block_addr,user_addr,caller,blocksize,wanted_size\r\n");
+ 
+    while (pxLink != pxEnd)
+    {
+		
+        printf("%s, 0x%p, 0x%p, 0x%p,%d,%d\r\n", ((pxLink->xBlockSize & heapBLOCK_ALLOCATED_BITMASK)!=0)? "U":"F", pxLink, (uint8_t *)pxLink+xHeapStructSize, pxLink->caller, (( pxLink->xBlockSize ) & ~heapBLOCK_ALLOCATED_BITMASK), pxLink->xWantedSize);
+        pxLink =(BlockLink_t *) (( uint8_t * )pxLink + (( pxLink->xBlockSize ) & ~heapBLOCK_ALLOCATED_BITMASK));
+    }
+
+    xTaskResumeAll();
+}
+```
+
+- 利用库打桩机制，替换标准库中的 malloc free realloc 等内存分配函数。
+
+```c
+
+/************** wrap C library functions **************/
+void * __wrap_malloc (size_t size)
+{
+    void *caller = __builtin_return_address (0);
+	return pvPortMalloc(size, caller);
+}
+
+void * __wrap__malloc_r (void *p, size_t size)
+{
+	void *caller = __builtin_return_address (0);
+	return pvPortMalloc(size, caller);
+}
+
+void __wrap_free (void *pv)
+{
+	vPortFree(pv);
+}
+
+void * __wrap_calloc (size_t a, size_t b)
+{
+	void *pvReturn;
+    void *caller = __builtin_return_address (0);
+    pvReturn = pvPortMalloc( a*b, caller);
+    if (pvReturn)
+    {
+        memset(pvReturn, 0, a*b);
+    }
+
+    return pvReturn;
+}
+
+void * __wrap_realloc (void* pv, size_t size)
+{
+    void *caller = __builtin_return_address (0);
+	return pvPortRealloc(pv, size, caller);
+}
+
+void __wrap__free_r (void *p, void *x)
+{
+  __wrap_free(x);
+}
+
+void* __wrap__realloc_r (void *p, void* x, size_t sz)
+{
+    void *caller = __builtin_return_address (0);
+	return pvPortRealloc(x, sz, caller);
+}
+
+/*-----------------------------------------------------------*/
+```
+gcc 的链接器支持用 --wrap f 参数进行链接时打桩，这个参数告诉链接器，把对符号 f 的引用解析成 __wrap_f。通过这个机制，我们调用malloc的时候，便会替换成我们加了调试信息的__wrap_malloc。另外，再使用 __builtin_return_address 接口获取函数的返回地址并记录，这样就知道是谁申请了这块内存。
+
+最后再添加连接器参数：
+```
+sdk_add_link_options(
+        -Wl,--wrap=malloc
+        -Wl,--wrap=_malloc_r
+        -Wl,--wrap=free
+        -Wl,--wrap=calloc
+        -Wl,--wrap=realloc
+        -Wl,--wrap=_free_r
+        -Wl,--wrap=_realloc_r
+)
+```
+
+对于内存越界问题，可以在每个内存块的末尾增加冗余长度，并填充特定数据，在内存释放的时候检查填充的数据有没有被篡改，以此判断是否存在内存被破坏问题。
+
+- pvPortMalloc 的修改
+
+在 xWantedSize 的基础上增加一个字节，确保内存块的尾部够空间填充一个特殊数据。然后在将要分配出去的内存块中末尾未使用的数据全部填充为0xfd，填充的长度为 pxBlock->xBlockSize-_xWantedSize-xHeapStructSize。 
+
+```c
+void * pvPortMalloc( size_t xWantedSize , void * caller)
+{
+    BlockLink_t * pxBlock, * pxPreviousBlock, * pxNewBlockLink;
+    void * pvReturn = NULL;
+    size_t xAdditionalRequiredSize;
+    size_t _xWantedSize = xWantedSize;
+
+    vTaskSuspendAll();
+    {
+        /* If this is the first call to malloc then the heap will require
+         * initialisation to setup the list of free blocks. */
+        if( pxEnd == NULL )
+        {
+            prvHeapInit();
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        if( xWantedSize > 0 )
+        {
+            /* The wanted size must be increased so it can contain a BlockLink_t
+             * structure in addition to the requested amount of bytes. Some
+             * additional increment may also be needed for alignment. */
+            xWantedSize += 1;
+            xAdditionalRequiredSize = xHeapStructSize  + portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK );
+
+            if( heapADD_WILL_OVERFLOW( xWantedSize, xAdditionalRequiredSize ) == 0 )
+            {
+                xWantedSize += xAdditionalRequiredSize;
+            }
+            else
+            {
+                xWantedSize = 0;
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        /* Check the block size we are trying to allocate is not so large that the
+         * top bit is set.  The top bit of the block size member of the BlockLink_t
+         * structure is used to determine who owns the block - the application or
+         * the kernel, so it must be free. */
+        if( heapBLOCK_SIZE_IS_VALID( xWantedSize ) != 0 )
+        {
+            if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
+            {
+                /* Traverse the list from the start (lowest address) block until
+                 * one of adequate size is found. */
+                pxPreviousBlock = &xStart;
+                pxBlock = xStart.pxNextFreeBlock;
+
+                while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != NULL ) )
+                {
+                    pxPreviousBlock = pxBlock;
+                    pxBlock = pxBlock->pxNextFreeBlock;
+                }
+
+                /* If the end marker was reached then a block of adequate size
+                 * was not found. */
+                if( pxBlock != pxEnd )
+                {
+                    /* Return the memory space pointed to - jumping over the
+                     * BlockLink_t structure at its start. */
+                    pvReturn = ( void * ) ( ( ( uint8_t * ) pxPreviousBlock->pxNextFreeBlock ) + xHeapStructSize );
+
+                    /* This block is being returned for use so must be taken out
+                     * of the list of free blocks. */
+                    pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
+
+                    /* If the block is larger than required it can be split into
+                     * two. */
+                    if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
+                    {
+                        /* This block is to be split into two.  Create a new
+                         * block following the number of bytes requested. The void
+                         * cast is used to prevent byte alignment warnings from the
+                         * compiler. */
+                        pxNewBlockLink = ( void * ) ( ( ( uint8_t * ) pxBlock ) + xWantedSize );
+                        configASSERT( ( ( ( size_t ) pxNewBlockLink ) & portBYTE_ALIGNMENT_MASK ) == 0 );
+
+                        /* Calculate the sizes of two blocks split from the
+                         * single block. */
+                        pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+                        pxNewBlockLink->xWantedSize = 0;
+                        pxNewBlockLink->caller = NULL;
+                        pxBlock->xBlockSize = xWantedSize;
+
+                        /* Insert the new block into the list of free blocks. */
+                        prvInsertBlockIntoFreeList( pxNewBlockLink );
+                    }
+                    else
+                    {
+                        mtCOVERAGE_TEST_MARKER();
+                    }
+
+                    
+
+                    xFreeBytesRemaining -= pxBlock->xBlockSize;
+                    
+
+                    if( xFreeBytesRemaining < xMinimumEverFreeBytesRemaining )
+                    {
+                        xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+                    }
+                    else
+                    {
+                        mtCOVERAGE_TEST_MARKER();
+                    }
+
+              
+                    pxBlock->xWantedSize = _xWantedSize;
+                    pxBlock->caller = caller;
+                    int _len = pxBlock->xBlockSize-_xWantedSize-xHeapStructSize;
+					uint8_t *_p = (uint8_t *)pxBlock+_xWantedSize+xHeapStructSize;
+					while (_len > 0)
+					{
+						*_p = 0xfd;
+						_p++;
+						_len--;
+					}
+
+                    /* The block is being returned - it is allocated and owned
+                     * by the application and has no "next" block. */
+                    heapALLOCATE_BLOCK( pxBlock );
+                    pxBlock->pxNextFreeBlock = NULL;
+                    xNumberOfSuccessfulAllocations++;
+                }
+                else
+                {
+                    mtCOVERAGE_TEST_MARKER();
+                }
+            }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+
+        traceMALLOC( pvReturn, xWantedSize );
+    }
+    xTaskResumeAll();
+
+    #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+    {
+        if( pvReturn == NULL )
+        {
+            vApplicationMallocFailedHook();
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+    }
+    #endif /* if ( configUSE_MALLOC_FAILED_HOOK == 1 ) */
+
+    configASSERT( ( ( ( size_t ) pvReturn ) & ( size_t ) portBYTE_ALIGNMENT_MASK ) == 0 );
+    return pvReturn;
+}
+```
+
+在释放内存的时候检查内存块的填充数据是否有被篡改，如果有被篡改则说明出现了内存越界问题，可以打印当前内存块的 caller 信息和 dump 整个 block 数据，然后立再触发 ASSERT。
+除了在内存释放的时候检查heap是否有越界，也可以在任务上下文切换的时候检查，不过这样会增加任务调度的开销，影响任务切换的效率。
+
+```c
+
+void vPortFree( void * pv )
+{
+    uint8_t * puc = ( uint8_t * ) pv;
+    BlockLink_t * pxLink;
+
+    if( pv != NULL )
+    {
+        /* The memory being freed will have an BlockLink_t structure immediately
+         * before it. */
+        puc -= xHeapStructSize;
+
+        /* This casting is to keep the compiler from issuing warnings. */
+        pxLink = ( void * ) puc;
+
+        configASSERT( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 );
+        configASSERT( pxLink->pxNextFreeBlock == NULL );
+
+        if( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 )
+        {
+            if( pxLink->pxNextFreeBlock == NULL )
+            {
+                /* The block is being returned to the heap - it is no longer
+                 * allocated. */
+                heapFREE_BLOCK( pxLink );
+                #if ( configHEAP_CLEAR_MEMORY_ON_FREE == 1 )
+                {
+                    ( void ) memset( puc + xHeapStructSize, 0, pxLink->xBlockSize - xHeapStructSize );
+                }
+                #endif
+
+                vTaskSuspendAll();
+                int _len = pxLink->xBlockSize - pxLink->xWantedSize - xHeapStructSize;
+				uint8_t *_p = (uint8_t *)pxLink + pxLink->xWantedSize + xHeapStructSize;
+				while (_len > 0)
+				{
+					if(*_p != 0xfd)
+					{
+						printf("mem crash,block:0x%p,caller: 0x%p, 0x%02x\r\n", pxLink, pxLink->caller, *_p);
+					}
+					configASSERT( (*_p == 0xfd ) );
+					_p++;
+					_len--;
+				}
+
+                {
+                    /* Add this block to the list of free blocks. */
+                    xFreeBytesRemaining += pxLink->xBlockSize;
+                    traceFREE( pv, pxLink->xBlockSize );
+                    pxLink->xWantedSize = 0;
+                    prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
+                    xNumberOfSuccessfulFrees++;
+                }
+                /*( void ) */xTaskResumeAll();
+            }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+    }
+}
+```
+
+增加 heap info 信息会增加内存分配的开销，导致实际可以使用的 heap 内存变小，在内存较小的机器，应在正式软件上关闭 heap info 信息，以节省内存。
+
+## heap info 调试案例
+
+### 内存泄漏问题案例
+
+
+打开 mqtt 之前的 heap info：
 
 ```bash
 address: 0x40aae8
@@ -502,7 +1138,7 @@ U,0x425d98,0x425e98,0x803f4,112,92
 F,0x425e08,0x425f08,0x14d11,41448,1932
 ```
 
-mqtt 打开关闭之后的 heap info
+打开 mqtt，然后再关闭 mqtt 之后的 heap info:
 
 ```bash
 address: 0x40aae8
@@ -988,20 +1624,19 @@ U,0x425e28,0x425f28,0x803f4,2064,2048
 U,0x426638,0x426738,0x803f4,112,92
 ```
 
-再用address2line工具定位这几块内存是哪里申请的
+再用 address2line 工具定位这几块内存是哪里申请的
 
 ```bash
 toolchain/gcc-arm-none-eabi-5_4-2016q3/bin 
 ❯ ./arm-none-eabi-addr2line -e ~/FC41D/beken_freertos_sdk_release-SDK_3.0.21/out/beken7231_bsp.elf -f 0x140f3 0x803f4 0x803f4
 cJSON_strdup
-/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/demos/common/json/cJSON.c:67
+/home/x/FC41D/beken_freertos_sdk_release-SDK_3.0.21/demos/common/json/cJSON.c:67
 rtos_create_thread
-/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98
+/home/x/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98
 rtos_create_thread
-/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98
+/home/x/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98
 ```
-/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98 对应的是创建线程的函数 rtos_create_thread
-原因是关闭mqtt的时候，没有删除线程。
+/home/x/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/os/FreeRTOSv9.0.0/rtos_pub.c:98 对应的是创建线程的函数 rtos_create_thread
 
 ```c
 int ali_iot_close(custom_func_ch_id_e func_id, void *hdl)
@@ -1038,15 +1673,17 @@ int ali_iot_close(custom_func_ch_id_e func_id, void *hdl)
     return 0;
 }
 ```
-rtos_delete_thread(mqtt_client->task); 传参不对，rtos_delete_thread(&mqtt_client->task);之后正常。
+分析代码之后，找到原因是关闭mqtt的时候，没有正确删除线程导致的内存泄漏。 rtos_delete_thread(mqtt_client->task); 传参不对，修改为 rtos_delete_thread(&mqtt_client->task);之后正常。
 
-## heap 内存写越界案例
+内存泄漏的判断方法：
+1. 功能打开关闭之后，对比前后的 heap info 信息，看看有哪些新增加的内存分配信息，按照这个线索去排查。
+2. 挂机压测一段时间之后，打印 heap info 信息，按照 caller 出现的次数排序，出现次数较多的前几个 caller，或者内存申请较多的caller，是该怀疑存在内存泄漏的对象。
+
+### heap 内存写越界案例
 
 free 的时候检测到内存块被破坏
 
 ```bash
-
-lyy debug wlan_event_handler 676
 mem corrupt,block:0x422ef8, blocksize:24, xWantedSize:4, caller:0x34747
 dump block:
 00000000:  00 00 00 00 18 00 00 00  ........
@@ -1055,13 +1692,14 @@ dump block:
 
 
 ```
+
 调用者申请了4字节内存空间，分配的内存块大小是24字节，减去头部16字节，后面填充了4字节的0xfd,从dump的内存数据来看，填充的数据都被覆盖完了, 通过 caller:0x34747 查找代码位置
 
 ```bash
 FC41D/beken_freertos_sdk_release-SDK_3.0.21 on  Iotbranch [!?⇡] 
-❯ ./toolchain/gcc-arm-none-eabi-5_4-2016q3/bin/arm-none-eabi-addr2line -e quectel_build/Release/FC41DAAR11A05_RYY_V01_/Debug/beken7231_bsp.elf  -f 0x34747
+❯ ./toolchain/gcc-arm-none-eabi-5_4-2016q3/bin/arm-none-eabi-addr2line -e Release/Debug/beken7231_bsp.elf  -f 0x34747
 fs_open_custom
-/home/xinqiang/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/func/lwip_intf/lwip-2.0.2/src/apps/httpd/custom_fsdata.c:239
+/home/x/FC41D/beken_freertos_sdk_release-SDK_3.0.21/beken378/func/lwip_intf/lwip-2.0.2/src/apps/httpd/custom_fsdata.c:239
 
 ```
 
@@ -1070,7 +1708,7 @@ fs_open_custom
 ```c
 int fs_open_custom(struct fs_file *file, const char *name)
 {
-    char *wifi_data="{\"aps\":[{\"ssid\":\"quectel\"},{\"ssid\":\"test234\"}]}";
+    char *wifi_data="{\"aps\":[{\"ssid\":\"123\"},{\"ssid\":\"test234\"}]}";
     int file_data_len = 0;
     
      /* this example only provides one file */
@@ -1148,9 +1786,4 @@ int fs_open_custom(struct fs_file *file, const char *name)
 ```
 
 file->pextension = malloc(sizeof(file_data_len)); 传的参数传错了，sizeof(file_data_len) 是4字节，实际需要申请 file_data_len 字节，导致后面内存写越界了。
-
-
-## freertos 的 heap4 怎么增加 heapinfo 调试信息？
-
-todo
 

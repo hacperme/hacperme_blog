@@ -1,7 +1,7 @@
 ---
 title: "Ubuntu-20.04 python 2.7 安装 pylzma 失败问题处理"
 date: 2024-07-03T02:00:18+08:00
-lastmod: 2024-07-03T02:00:18+08:00
+lastmod: 2024-07-09T02:00:18+08:00
 author: ["hacper"]
 tags:
    - pylzma
@@ -11,10 +11,10 @@ tags:
 categories:
     - 笔记
 description: "" # 文章描述，与搜索优化相关
-summary: "" # 文章简单描述，会展示在主页
+summary: "Ubuntu 系统环境下，python 2.7 安装 pylzma。" # 文章简单描述，会展示在主页
 # weight: # 输入1可以顶置文章，用来给文章展示排序，不填就默认按时间排序
 slug: ""
-draft: true # 是否为草稿
+draft: false # 是否为草稿
 comments: true
 showToc: true # 显示目录
 TocOpen: true # 自动展开目录
@@ -77,7 +77,7 @@ Failed to build pylzma
 Installing collected packages: pylzma
     Running setup.py install for pylzma ... error
     ERROR: Command errored out with exit status 1:
-     command: /usr/bin/python2.7 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"'; __file__='"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-LvdYpy/install-record.txt --single-version-externally-managed --user --prefix= --compile --install-headers /home/xinqiang/.local/include/python2.7/pylzma
+     command: /usr/bin/python2.7 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"'; __file__='"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-LvdYpy/install-record.txt --single-version-externally-managed --user --prefix= --compile --install-headers /home/xxx/.local/include/python2.7/pylzma
          cwd: /tmp/pip-install-wMwVPQ/pylzma/
     Complete output (27 lines):
     running install
@@ -108,12 +108,13 @@ Installing collected packages: pylzma
     compilation terminated.
     error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
     ----------------------------------------
-ERROR: Command errored out with exit status 1: /usr/bin/python2.7 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"'; __file__='"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-LvdYpy/install-record.txt --single-version-externally-managed --user --prefix= --compile --install-headers /home/xinqiang/.local/include/python2.7/pylzma Check the logs for full command output.
+ERROR: Command errored out with exit status 1: /usr/bin/python2.7 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"'; __file__='"'"'/tmp/pip-install-wMwVPQ/pylzma/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-LvdYpy/install-record.txt --single-version-externally-managed --user --prefix= --compile --install-headers /home/xxx/.local/include/python2.7/pylzma Check the logs for full command output.
 
 
 ```
 
 一安装就报错，折腾老半天:
+
 ```
  x86_64-linux-gnu-gcc -pthread -fno-strict-aliasing -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-CxOYiX/python2.7-2.7.18=. -fstack-protector-strong -Wformat -Werror=format-security -fPIC -DPY_SSIZE_T_CLEAN=1 -DWITH_COMPAT=1 -DPYLZMA_VERSION=0.5.0 -D_7ZIP_ST=1 -Isrc/sdk/C -I/usr/include/python2.7 -c src/pylzma/pylzma.c -o build/temp.linux-x86_64-2.7/src/pylzma/pylzma.o
   src/pylzma/pylzma.c:26:10: fatal error: Python.h: No such file or directory
@@ -124,6 +125,7 @@ ERROR: Command errored out with exit status 1: /usr/bin/python2.7 -u -c 'import 
 ```
 
 后面才发现是需要安装 libpython2.7-dev 包
+
 ```bash
 sudo apt-get install libpython2.7-dev
 Reading package lists... Done
@@ -167,7 +169,7 @@ Collecting pylzma
 Building wheels for collected packages: pylzma
   Building wheel for pylzma (setup.py) ... done
   Created wheel for pylzma: filename=pylzma-0.5.0-cp27-cp27mu-linux_x86_64.whl size=141946 sha256=b377270f54367f030a7250e6f01a76e9d05262f124bd73bf039bc82425a1570c
-  Stored in directory: /home/xinqiang/.cache/pip/wheels/a3/08/31/80d21f91a9a7bf972721aee8a821c96311b65781dda8a6411a
+  Stored in directory: /home/xxx/.cache/pip/wheels/a3/08/31/80d21f91a9a7bf972721aee8a821c96311b65781dda8a6411a
 Successfully built pylzma
 Installing collected packages: pylzma
 Successfully installed pylzma-0.5.0

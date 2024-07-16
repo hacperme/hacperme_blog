@@ -1,18 +1,19 @@
 ---
-title: "FC41D 导出flash数据方法"
+title: "FC41D 通过烧录工具 BKFIL 导出 flash 指定分区数据方法"
 date: 2024-07-11T02:00:18+08:00
 lastmod: 2024-07-11T02:00:18+08:00
 author: ["hacper"]
 tags:
    - FC41D
    - BKFIL
+   - bk7231m
 categories:
     - 笔记
 description: "" # 文章描述，与搜索优化相关
 summary: "" # 文章简单描述，会展示在主页
 # weight: # 输入1可以顶置文章，用来给文章展示排序，不填就默认按时间排序
 slug: ""
-draft: true # 是否为草稿
+draft: false # 是否为草稿
 comments: true
 showToc: true # 显示目录
 TocOpen: true # 自动展开目录
@@ -28,9 +29,6 @@ showbreadcrumbs: true #顶部显示当前路径
 按照分区地址和大小，在烧录工具上配置各个分区文件地址和大小。
 
 ![image-20240711101046365](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711101046365.1021tszend.webp)
-
-
-
 
 
 按照标识顺序填写
@@ -49,4 +47,4 @@ showbreadcrumbs: true #顶部显示当前路径
 
 ![image-20240711100625169](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711100625169.5tqwpxmsjq.webp)
 
-同样的方式，可以通过这样配置擦除、写入指定位置大小的数据。
+也可以通过同样的方式配置来擦除、写入指定位置大小的数据。

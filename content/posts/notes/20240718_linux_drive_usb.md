@@ -63,7 +63,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 ## USB 的拓扑结构和特点
 
-USB的拓扑结构是树形（star topology）结构，这种结构使得设备可以通过多个层次的集线器（HUB）连接到主机。
+USB的拓扑结构是树形结构，这种结构使得设备可以通过多个层次的集线器（HUB）连接到主机。
 
 ```
                           主机（Host）
@@ -217,11 +217,11 @@ USB总线、端点及其传输方式总结：
 ### USB 逻辑拓扑结构
 
 在内核中的实现所有的 Hub 和设备都被看做是一个个的逻辑设备（Logical Device）。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240718/image.6bgyosggqx.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240718/image.6bgyosggqx.webp)
 
 一个 USB 逻辑设备就是一系列端点的集合，它与主机之间的通信发生在主机上的一个缓冲区和设备上的一个端点之间，通过管道来传输数据。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240718/image.2vemwpa5mk.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240718/image.2vemwpa5mk.webp)
 
 USB 端点被捆绑为接口（Interface），一个接口代表一个基本功能。有的设备具有多个接口，像 USB 扬声器就包括一个键盘接口和一个音频流接口。在内核中，一个接口要对应一个驱动程序，SB 扬声器在 Linux 里就需要两个不同的驱动程序。
 
@@ -229,7 +229,6 @@ USB 端点被捆绑为接口（Interface），一个接口代表一个基本功�
 
 sysfs 是 Linux 内核中一个伪文件系统，它提供了一种统一的方式，将内核对象、属性和状态信息以文件和目录的形式暴露给用户空间。我们可通过 sysfs 查看和管理系统设备
 
-### sysfs 中的 USB 命名规则
 
 ### sysfs的作用
 
@@ -276,25 +275,92 @@ sysfs 是 Linux 内核中一个伪文件系统，它提供了一种统一的方�
      - `remove`：写入 `1` 可以从系统中移除设备。
 
 usb 鼠标的目录树
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240718/image.7egnzpp4tf.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240718/image.7egnzpp4tf.webp)
 
 查看设备名称和制造商
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240718/image.6t70dew14s.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240718/image.6t70dew14s.webp)
 
 
 ## linux usb 驱动代码
 
 ### linux/drivers/usb 的代码结构和作用
+在Linux内核源代码中，drivers/usb/ 目录包含与USB子系统相关的驱动程序和核心代码。
+
+### 1. `drivers/usb/core/`
+- **作用**：包含USB子系统的核心代码，负责USB设备的发现、配置和管理。
+- **主要文件和功能**：
+  - `usb.c`：USB核心初始化和管理功能。
+  - `hub.c`：处理USB集线器（Hub）的功能。
+  - `hcd.c`：主机控制器驱动的通用代码。
+  - `urb.c`：处理USB请求块（URB）相关的功能。
+
+### 2. `drivers/usb/host/`
+- **作用**：包含USB主机控制器驱动程序（HCD），负责与USB硬件控制器进行通信。
+- **主要文件和功能**：
+  - `ehci-hcd.c`：EHCI（增强型主机控制器接口）驱动。
+  - `ohci-hcd.c`：OHCI（开放主机控制器接口）驱动。
+  - `uhci-hcd.c`：UHCI（通用主机控制器接口）驱动。
+  - `xhci-hcd.c`：xHCI（扩展主机控制器接口）驱动。
+
+### 3. `drivers/usb/storage/`
+- **作用**：包含USB大容量存储设备的驱动程序，例如USB闪存驱动和外部硬盘驱动。
+- **主要文件和功能**：
+  - `usb-storage.c`：通用USB存储设备驱动。
+  - `uas.c`：USB附加存储（UAS）驱动，支持更高效的传输协议。
+
+### 4. `drivers/usb/gadget/`
+- **作用**：包含USB设备模式（Gadget）的驱动程序，主要用于嵌入式系统，使设备能够作为USB外设连接到主机。
+- **主要文件和功能**：
+  - `udc/`：USB设备控制器驱动程序。这个驱动是针对具体 CPU 平台的，如果找不到现成的，就要自己实现
+  - `composite.c`：复合USB设备驱动框架。
+  - `function/`：包含具体功能驱动，如USB网络、串口和存储功能。
+
+### 5. `drivers/usb/serial/`
+- **作用**：包含USB串行设备的驱动程序，例如USB到串口转换器。
+- **主要文件和功能**：
+  - `usb-serial.c`：通用USB串行驱动框架。
+  - `pl2303.c`：Prolific PL2303 USB串行转换器驱动。
+  - `ftdi_sio.c`：FTDI USB串行转换器驱动。
+
+### 6. `drivers/usb/misc/`
+- **作用**：包含其他不属于上述分类的USB设备驱动程序。
+- **主要文件和功能**：
+  - `usbtest.c`：USB测试驱动，用于测试和验证USB子系统。
+  - `legousbtower.c`：LEGO USB塔驱动。
+
+### 7. `drivers/usb/mon/`
+- **作用**：包含USB监控（usbmon）驱动程序，用于捕获和监控USB流量。
+- **主要文件和功能**：
+  - `mon.c`：USB监控驱动核心代码。
+
+### 8. `drivers/usb/typec/`
+- **作用**：包含USB Type-C和USB Power Delivery（USB PD）相关的驱动程序。
+- **主要文件和功能**：
+  - `typec.c`：USB Type-C核心代码。
+  - `tcpm/`：Type-C端口管理器相关驱动。
+
+| **目录**               | **作用**                                                              | **主要文件和功能**                                                                                  |
+|------------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `drivers/usb/core/`    | USB子系统的核心代码，设备发现、配置和管理                               | `usb.c`、`hub.c`、`hcd.c`、`urb.c`                                                                  |
+| `drivers/usb/host/`    | USB主机控制器驱动                                                     | `ehci-hcd.c`、`ohci-hcd.c`、`uhci-hcd.c`、`xhci-hcd.c`                                              |
+| `drivers/usb/storage/` | USB大容量存储设备驱动                                                 | `usb-storage.c`、`uas.c`                                                                            |
+| `drivers/usb/gadget/`  | USB设备模式驱动，嵌入式系统使用                                       | `udc/`、`composite.c`、`function/`                                                                  |
+| `drivers/usb/serial/`  | USB串行设备驱动                                                       | `usb-serial.c`、`pl2303.c`、`ftdi_sio.c`                                                            |
+| `drivers/usb/misc/`    | 其他USB设备驱动                                                       | `usbtest.c`、`legousbtower.c`                                                                       |
+| `drivers/usb/mon/`     | USB监控驱动，用于捕获和监控USB流量                                     | `mon.c`                                                                                             |
+| `drivers/usb/typec/`   | USB Type-C和USB PD相关驱动                                            | `typec.c`、`tcpm/`                                                                                  |
 
 
-### usbcore 的作用
+### usb core 的作用
+
+USB Core 负责实现一些核心的功能，为别的设备驱动程序提供服务，提供一个用于访问和控制 USB 硬件的接口，而不用去考虑系统当前存在哪种主机控制器。
 
 内核中 USB 子系统的结构
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240718/image.3k7wgstrqt.webp)
 
-![image](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240718/image.3k7wgstrqt.webp)
+### usb core 代码流程
 
-### usbcore 代码流程
-
+linux/drivers/usb/core/usb.c
 代码入口
 初始化流程
 

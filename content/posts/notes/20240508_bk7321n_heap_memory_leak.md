@@ -1,7 +1,7 @@
 ---
 title: "为 freertos 的 heap_4 动态内存分配方案增加 heap info 调试信息"
 date: 2024-06-23T02:00:18+08:00
-lastmod: 2024-06-23T02:00:18+08:00
+lastmod: 2024-07-29T02:00:18+08:00
 author: ["hacper"]
 tags:
     - bk7231n
@@ -662,6 +662,7 @@ void vPortFree( void * pv )
 
 ### 内存泄漏问题案例
 
+#### 案例1
 
 打开 mqtt 之前的 heap info：
 
@@ -1674,6 +1675,243 @@ int ali_iot_close(custom_func_ch_id_e func_id, void *hdl)
 }
 ```
 分析代码之后，找到原因是关闭mqtt的时候，没有正确删除线程导致的内存泄漏。 rtos_delete_thread(mqtt_client->task); 传参不对，修改为 rtos_delete_thread(&mqtt_client->task);之后正常。
+
+#### 案例2
+
+挂测日志，出现 malloc 失败，主动重启：
+```
+[2024-07-26 10:23:39]  malloc failed !!!!!!!!!
+[2024-07-26 10:23:39]  
+[2024-07-26 10:23:39]  address: 0x40aaa0
+[2024-07-26 10:23:39]  size: 152928
+[2024-07-26 10:23:39]  avail: 352
+[2024-07-26 10:23:39]  pool_start: 0x40aaa0
+[2024-07-26 10:23:39]  pool_end: 0x42fff0
+[2024-07-26 10:23:39]  state,block_addr,user_addr,caller,blocksize,wanted_size
+[2024-07-26 10:23:39]  U,0x40aaa0,0x40aab0,0x1b959,4120,4096
+[2024-07-26 10:23:39]  U,0x40bab8,0x40bac8,0x1b979,40,20
+[2024-07-26 10:23:39]  U,0x40bae0,0x40baf0,0x1b959,536,512
+[2024-07-26 10:23:39]  U,0x40bcf8,0x40bd08,0x1b979,40,20
+[2024-07-26 10:23:39]  U,0x40bd20,0x40bd30,0x1b959,4120,4096
+[2024-07-26 10:23:39]  U,0x40cd38,0x40cd48,0x1b979,40,20
+[2024-07-26 10:23:39]  U,0x40cd60,0x40cd70,0x1b959,536,512
+[2024-07-26 10:23:39]  U,0x40cf78,0x40cf88,0x1b979,40,20
+[2024-07-26 10:23:39]  U,0x40cfa0,0x40cfb0,0x7e750,104,80
+[2024-07-26 10:23:39]  U,0x40d008,0x40d018,0x7e544,104,80
+
+......
+
+[2024-07-26 10:23:41]  U,0x42f368,0x42f378,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f3d0,0x42f3e0,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f438,0x42f448,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f4a0,0x42f4b0,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f508,0x42f518,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f570,0x42f580,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f5d8,0x42f5e8,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f640,0x42f650,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f6a8,0x42f6b8,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f710,0x42f720,0x4ae8b,416,396
+[2024-07-26 10:23:41]  U,0x42f8b0,0x42f8c0,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f918,0x42f928,0x7e750,104,80
+[2024-07-26 10:23:41]  U,0x42f980,0x42f990,0x28721,104,80
+[2024-07-26 10:23:41]  F,0x42f9e8,0x42f9f8,0x95719,112,88
+[2024-07-26 10:23:41]  U,0x42fa58,0x42fa68,0x9e76d,536,512
+[2024-07-26 10:23:41]  U,0x42fc70,0x42fc80,0xacb8d,792,768
+[2024-07-26 10:23:41]  F,0x42ff88,0x42ff98,(nil),104,0
+[2024-07-26 10:23:41]  bk_reboot
+[2024-07-26 10:23:41]  wdt reboot
+```
+写脚本，将 log 保存为 csv 文件，并把 caller 地址对应的函数名找出来
+
+```python
+from elftools.elf.elffile import ELFFile
+import csv
+
+def find_function_name(elf_file, address):
+    symtab = elf_file.get_section_by_name('.symtab')
+    if not symtab:
+        print("No symbol table found in the ELF file.")
+        return None
+    
+    for symbol in symtab.iter_symbols():
+        start_addr = symbol.entry.st_value
+        size = symbol.entry.st_size
+        if start_addr <= address < start_addr + size:
+            return symbol.name
+    
+    print(f"No function found at address 0x{address:x} in the ELF file.")
+    return None
+
+def find_function_address(elf_file, function_name):
+    symtab = elf_file.get_section_by_name('.symtab')
+    if not symtab:
+        print("No symbol table found in the ELF file.")
+        return None
+    
+    for symbol in symtab.iter_symbols():
+        if symbol.name == function_name:
+            return symbol.entry.st_value
+    
+    print(f"Function '{function_name}' not found in the ELF file.")
+    return None
+
+
+def read_csv(file_path):
+    with open(file_path, mode='r', newline='', encoding='utf-8') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        header = next(csv_reader)  # 读取表头
+        data = [row for row in csv_reader]  # 读取数据
+    return header, data
+
+def write_csv(file_path, header, data):
+    with open(file_path, mode='w', newline='', encoding='utf-8') as csv_file:
+        csv_reader = csv.writer(csv_file)
+        csv_reader.writerow(header)
+        csv_reader.writerows(data)
+        
+
+f = open("malloc failed/beken7231_bsp.elf", "rb")
+elffile = ELFFile(f)
+header, data = read_csv("malloc failed/heap.csv")
+f.close()
+
+header.append("func_name")
+
+for row in data:
+    caller = row[3]
+    try:
+        # 尝试将十六进制字符串转换为整数
+        caller = int(caller, 16)
+        fn = find_function_name(elffile, caller)
+    except ValueError:
+        fn = None
+    except TypeError:
+        fn = None
+    
+    # print(caller)
+    
+    
+    if fn is None:
+        fn = ""
+        # caller = hex(caller)
+    row.append(fn)
+    # print((caller, fn))
+
+# 将使用中的内存过滤出来
+data2 =[]
+for i in data:
+    if i[0] == "U":
+        data2.append(i)
+        
+
+
+write_csv("malloc failed/heap_U.csv", header, data2)
+```
+
+处理之后的部分数据
+
+| state | block_addr | user_addr | caller  | blocksize | wanted_size | func_name                     |
+| ----- | ---------- | --------- | ------- | --------- | ----------- | ----------------------------- |
+| U     | 0x40aaa0   | 0x40aab0  | 0x1b959 | 4120      | 4096        | kfifo_alloc                   |
+| U     | 0x40bab8   | 0x40bac8  | 0x1b979 | 40        | 20          | kfifo_alloc                   |
+| U     | 0x40bae0   | 0x40baf0  | 0x1b959 | 536       | 512         | kfifo_alloc                   |
+| U     | 0x40bcf8   | 0x40bd08  | 0x1b979 | 40        | 20          | kfifo_alloc                   |
+| U     | 0x40bd20   | 0x40bd30  | 0x1b959 | 4120      | 4096        | kfifo_alloc                   |
+| U     | 0x40cd38   | 0x40cd48  | 0x1b979 | 40        | 20          | kfifo_alloc                   |
+| U     | 0x40cd60   | 0x40cd70  | 0x1b959 | 536       | 512         | kfifo_alloc                   |
+| U     | 0x40cf78   | 0x40cf88  | 0x1b979 | 40        | 20          | kfifo_alloc                   |
+| U     | 0x40cfa0   | 0x40cfb0  | 0x7e750 | 104       | 80          | xQueueCreateMutex             |
+| U     | 0x40d008   | 0x40d018  | 0x7e544 | 104       | 80          | xQueueCreateCountingSemaphore |
+| U     | 0x40d070   | 0x40d080  | 0x28721 | 104       | 80          | sys_sem_new                   |
+| U     | 0x40d0d8   | 0x40d0e8  | 0x140c3 | 64        | 40          | cJSON_New_Item                |
+| U     | 0x40d118   | 0x40d128  | 0x839e7 | 56        | 8           | mm_printf_beacon_ie           |
+| U     | 0x40d150   | 0x40d160  | 0x9f569 | 32        | 9           | dup_binstr                    |
+| U     | 0x40d170   | 0x40d180  | 0x9ffbb | 40        | 22          | os_memdup                     |
+| U     | 0x40d198   | 0x40d1a8  | 0x7111d | 40        | 9           | os_strdup                     |
+| U     | 0x40d1c0   | 0x40d1d0  | 0x839e7 | 64        | 26          | mm_printf_beacon_ie           |
+| U     | 0x40d200   | 0x40d210  | 0x35871 | 1048      | 1024        | dhcp_server_init              |
+| U     | 0x40d618   | 0x40d628  | 0x285f9 | 112       | 92          | sys_mbox_new                  |
+| U     | 0x40d688   | 0x40d698  | 0x99e45 | 192       | 172         | wpa_init                      |
+| U     | 0x40d748   | 0x40d758  | 0x9bd61 | 40        | 22          | wpa_auth_gen_wpa_ie           |
+| U     | 0x40d770   | 0x40d780  | 0x99d5b | 232       | 208         | wpa_group_init                |
+| U     | 0x40d858   | 0x40d868  | 0x9c23b | 72        | 48          | pmksa_cache_auth_init         |
+| U     | 0x40d8a0   | 0x40d8b0  | 0x9ddbb | 40        | 22          | hostap_set_generic_elem       |
+| U     | 0x40d8c8   | 0x40d8d8  | 0x9ffbb | 48        | 22          | os_memdup                     |
+
+统计函数名字出现的频次，进行分组。
+
+
+| func_name                     | 计数项:func_name |
+| ----------------------------- | ---------------- |
+| add_notifier                  | 1                |
+| ali_iot_open                  | 2                |
+| atsvr_msg_main                | 1                |
+| cfg_param_init                | 3                |
+| cJSON_New_Item                | 99               |
+| cJSON_strdup                  | 120              |
+| cli_init                      | 1                |
+| dhcp_server_init              | 1                |
+| dup_binstr                    | 2                |
+| eloop_register_signal         | 1                |
+| eloop_register_sock           | 1                |
+| eloop_register_timeout        | 1                |
+| fsocket_init                  | 6                |
+| fsocket_send                  | 1                |
+| handle_probe_req              | 1                |
+| handle_read                   | 1                |
+| hostap_get_hw_feature_data    | 6                |
+| hostap_init                   | 1                |
+| hostap_send_mlme              | 1                |
+| hostap_set_generic_elem       | 1                |
+| hostapd_add_iface             | 1                |
+| hostapd_alloc_bss_data        | 1                |
+| hostapd_alloc_iface           | 1                |
+| hostapd_config_defaults       | 3                |
+| hostapd_init                  | 1                |
+| hostapd_main_entry            | 1                |
+| hostapd_prepare_rates         | 2                |
+| hostapd_setup_wpa_psk         | 1                |
+| kfifo_alloc                   | 8                |
+| l2_packet_init                | 2                |
+| mm_printf_beacon_ie           | 5                |
+| os_memdup                     | 2                |
+| os_realloc_array              | 1                |
+| os_strdup                     | 4                |
+| parse_string                  | 10               |
+| pmksa_cache_auth_init         | 1                |
+| pmksa_cache_init              | 1                |
+| prvCheckForValidListAndQueue  | 1                |
+| ql_ssl_ctx_init               | 6                |
+| rtos_create_thread            | 28               |
+| rtos_init_queue               | 8                |
+| rtos_init_timer               | 2                |
+| supplicant_main_entry         | 1                |
+| sys_mbox_new                  | 4                |
+| sys_sem_new                   | 5                |
+| sys_thread_new                | 2                |
+| vTaskStartScheduler           | 2                |
+| wpa_auth_gen_wpa_ie           | 1                |
+| wpa_bss_update_scan_res       | 2                |
+| wpa_config_alloc_empty        | 1                |
+| wpa_config_read               | 1                |
+| wpa_driver_init               | 1                |
+| wpa_group_init                | 1                |
+| wpa_init                      | 1                |
+| wpa_psk_cache_init            | 1                |
+| wpa_sm_init                   | 1                |
+| wpa_supplicant_add_iface      | 2                |
+| wpa_supplicant_init           | 2                |
+| wpa_supplicant_init_wpa       | 1                |
+| xQueueCreateCountingSemaphore | 10               |
+| xQueueCreateMutex             | 428              |
+| xTimerCreateTimerTask         | 2                |
+
+xQueueCreateMutex 出现的次数最多，xQueueCreateMutex 调用一次分配 104 内存，出现 428 次，也就使用了 40 多 k 的内存一直没释放。
+
+排查代码逻辑，在联网失败的时候进入错误处理，有个互斥锁创建了未销毁，导致内存泄漏。
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240729/image.51e1ygv6zq.webp)
+
+#### 小结
 
 内存泄漏的判断方法：
 1. 功能打开关闭之后，对比前后的 heap info 信息，看看有哪些新增加的内存分配信息，按照这个线索去排查。

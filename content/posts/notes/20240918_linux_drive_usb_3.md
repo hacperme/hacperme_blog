@@ -176,6 +176,9 @@ IAD1的bFirstInterface为0，bInterfaceCount为2；IAD2的bFirstInterface为2，
 ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.pfb2n8fny.webp)
 当设备状态变为配置状态时，即可认为USB设备和USB主机间的枚举完成。
 
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.ic37ai1rb.webp)
+
+
 ## 枚举
 
 - 获取设备描述符
@@ -197,3 +200,8 @@ IAD1的bFirstInterface为0，bInterfaceCount为2；IAD2的bFirstInterface为2，
   USB主机获取USB设备的某个配置描述符后，会解析该配置描述符中所有的接口信息和端点信息，之后主机就可以发出SetConfiguration（）请求来通知 USB 设备使用哪一个配置
 
   USB 设备收到 SetConfiguration（）请求后，会判断配置值是否合法。如果合法，设备就进入配置状态。设备会根据配置值选择对应的配置描述符，进行初始化操作，如初始化该配置中所有接口中所有的端点。初始化完成后，设备就具备与主机进行数据传输的能力，此时枚举阶段结束。
+
+
+![image](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.7sn6icos5v.webp)
+
+![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.8l02032i9b.webp)

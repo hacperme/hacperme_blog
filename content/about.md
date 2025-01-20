@@ -9,11 +9,21 @@ showbreadcrumbs: false
 showToc: false
 searchHidden: true
 ---
+{{< load-photoswipe >}}
 
 一名深漂码农，网络代号 "hacper"，现从事嵌入式相关软件开发工作(主要忙于修 bug 和写 bug)。
 
-在互联网上圈了一块地，闲暇之余，记录一下自己的生活、思考和学习笔记。人生短暂而渺小，在这个广袤的互联网世界中，希望能够通过这块自留地留下一点自己存在的痕迹。
+在互联网上圈了一块地，闲暇之余，记录一下自己的生活、思考和学习笔记。
 
+#### MBIT
+
+在下 I 人，而且还是紫人组中的药水姐 INTP。
+{{< figure src="https://github.com/hacperme/picx-images-hosting/raw/master/20250120/intp-logician.77dnikq9i5.svg" width="200px" >}}
+
+#### 中国制霸
+
+不及格，有点宅，努力解锁更多城市中...
+{{< figure src="https://github.com/hacperme/picx-images-hosting/raw/master/20250120/zbzg.4n7t5xedmy.webp" width="400px" >}}
 
 ### 联系我
 

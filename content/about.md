@@ -23,7 +23,7 @@ searchHidden: true
 #### 中国制霸
 
 不及格，有点宅，努力解锁更多城市中...
-{{< figure src="https://github.com/hacperme/picx-images-hosting/raw/master/20250120/zbzg.4n7t5xedmy.webp" width="400px" >}}
+{{< figure src="https://github.com/hacperme/picx-images-hosting/raw/master/20250630/zhibazhongguo.witxev3il.webp" width="400px" >}}
 
 ### 联系我
 

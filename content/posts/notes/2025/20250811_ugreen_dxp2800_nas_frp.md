@@ -1,7 +1,7 @@
 ---
 title: "绿联 NAS 配置 frp 内网穿透"
 date: 2025-08-11T00:28:37+08:00
-lastmod: 2025-08-11T00:28:37+08:00
+lastmod: 2025-08-20T00:28:37+08:00
 author: ["hacper"]
 tags:
     - NAS
@@ -82,7 +82,7 @@ services:
 
 ## 客户端 NAS
 
-在 NAS 上搭建 frp 客户端需要在共享目录创建 docker/frpc文件目录，创建配置文件 frpc.toml ：
+在 NAS 上搭建 frp 客户端需要在共享目录创建 docker/frpc 文件目录，创建配置文件 frpc.toml ：
 
 ```toml
 serverAddr = "117.125.189.120"
@@ -103,7 +103,8 @@ remotePort = 9999
 其中 `serverAddr = "117.125.189.120"` 改成自己的公网服务器地址，`auth.token = "12345678"`改成服务器上配置的 token。
 增加需要内网穿透的服务， localIP 设置为 `127.0.0.1`，端口 localPort 和 remotePort 设置为实际使用的端口。
 
-新建 docker-compose.yaml 文件：
+在绿联 NAS docker 应用界面新建项目，保存路径选择 docker/frpc 目录，填写 docker-compose.yaml 内容：
+
 
 ```yaml
 services:
@@ -116,6 +117,10 @@ services:
     command: ["-c", "/frp/frpc.toml"]
     restart: always
 ```
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20250820/image.102hvxifz5.webp)
+
+然后点立即部署创建容器。
+
 注意 network_mode 需要设置为 host，创建容器、启动客户端之后便可以通过公网服务器ip:端口访问NAS的服务了,如访问 117.125.189.120:9999 登录NAS。
 
 如果有需要，之后可以添加更多的服务穿透，新增、修改、和删除服务只需要修改服务器和客户端的的配置文件，再重新启动 docker 容器。

@@ -35,7 +35,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 通常硬件寄存器会映射到一段特定的内存地址，我们可以通过指针来访问和修改寄存器的内容。每个寄存器的功能不一定相同，需要根据硬件手册来具体定义。下面以某个芯片平台的 pwm 控制寄存器为例，说明如何使用 c 语言描述硬件寄存器。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230719011111212.5buks5rpf3c0.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230719011111212.5buks5rpf3c0.webp)
 
 这个平台有 4 个 pwm 外设，控制寄存器的基址分别是 0xD401A000，0xD401A400，0xD401A800 ，0xD401AC00，然后每个 pwm 有三个 32 位 的寄存器，分别是 PWM_CRx，PWM_DCR，PWM_PCR。在这三个寄存器里面，不同的 bit 范围之间又控制着不同的功能。在 c 语言里面，可通过联合体、结构体和位域来定义这些寄存器的功能。
 

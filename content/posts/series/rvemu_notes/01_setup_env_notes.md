@@ -110,7 +110,7 @@ root@79a6aa79f852:/rvemu_env/rvemu# riscv64-unknown-elf-gcc test.c -o test
 
 vscode 可以直接连接到 docker 容器，不需要再配置网络、sshd 这些，也挺方便。在远程连接界面选择 Attach to Running Contaner 即可。编译跑一下已有的完整代码，验证环境是正常的。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.1lg5k9upb3c0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.1lg5k9upb3c0.png)
 
 ## makefile 基础知识
 

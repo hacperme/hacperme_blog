@@ -608,13 +608,13 @@ Mode                 LastWriteTime         Length Name
 ```
 
 点击 T32_beken_7231.bat 启动 Trace32
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240723/image.4916862rkk.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240723/image.4916862rkk.webp)
 
 查看任务调用栈
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240723/image.9nzoqlj1nz.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240723/image.9nzoqlj1nz.webp)
 
 查看任务列表
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240723/image.6m3spditri.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240723/image.6m3spditri.webp)
 
 切换任务上下文
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240723/image.26ldk47hmb.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240723/image.26ldk47hmb.webp)

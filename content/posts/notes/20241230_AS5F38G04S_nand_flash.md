@@ -45,19 +45,19 @@ showbreadcrumbs: true #顶部显示当前路径
  Device:4096 Blocks
 
 - 功能框图
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20241230/image.70aeso4j53.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20241230/image.70aeso4j53.webp)
 
 Nand Flash 里面有一个缓存，读写 page 都要先操作 cache 内存，然后再从 cache 写入到flash里面或者从 cache 读出数据。 
 
 - 内存寻址
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20241231/image.3rbax1n6vp.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20241231/image.3rbax1n6vp.webp)
 
 总共4096个block, 每个block 64 个page, 每个page 4096+256字节。
 内存地址分行地址RA和列地址CA，CA 13 bit，用来寻址page里面的每个字节的位置，RA 前6 bit 表示block中地几个page的地址，RA高12 bit表示第几个block的地址。
 
 单个page里面的内存布局，前面 4096 字节的数据存储区域，后面 256字节的 spare area。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20241231/image.2oblm6c5n5.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20241231/image.2oblm6c5n5.webp)
 
 
 ## 指令集
@@ -86,7 +86,7 @@ Nand Flash 里面有一个缓存，读写 page 都要先操作 cache 内存，�
 
 ## 功能寄存器
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20241231/image.2oblmezelv.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20241231/image.2oblmezelv.webp)
 
 Feature 寄存器一共有 3 个：Block Lock、OTP 和 Status。
 

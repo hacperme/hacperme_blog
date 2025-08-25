@@ -16,23 +16,23 @@ tags:
 
 ## 定位
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/定位.yjf3jw4m6eo.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/定位.yjf3jw4m6eo.png)
 
 ## 表达式
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/表达式.1jareij8pwlc.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/表达式.1jareij8pwlc.png)
 
 ## 量词
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/量词1.4rsfwbeuejs0.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/量词1.4rsfwbeuejs0.png)
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/量词2.3w50kxb49dk0.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/量词2.3w50kxb49dk0.png)
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/量词3.69qjn4ikif80.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/量词3.69qjn4ikif80.png)
 
 ## 字符组
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/字符组.6aekjt1hkic0.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/字符组.6aekjt1hkic0.png)
 
 | <th style="text-align: left;">POSIX 字符集</th> | <th style="text-align: left;">描述</th> |
 |----------------------------------------------------|-------------------------------------------|

@@ -36,25 +36,25 @@ ASR EC200A 平台可以通过CATsudio 的 Flashexplorer 导出模组文件系统
 
 两个文件更新之后，右上角两个图标显示绿色，表示匹配正确。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324134658891.5xq6v7uiod40.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324134658891.5xq6v7uiod40.png)
 
 然后在工具栏选择 Flashexplorer
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324135129870.5u1r8n5beic0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324135129870.5u1r8n5beic0.png)
 
 注意 EC200A 要选择 Application Core，与 cat 1 的不同之处。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324134938806.5rxqq83vww80.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324134938806.5rxqq83vww80.png)
 
 之后会显示文件目录树，在下面的窗口，可以对这些文件进行打开，修改、重命名等动作。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324134529099.5yb2ceehy140.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324134529099.5yb2ceehy140.png)
 
 
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324134604315.76fdytdh6go0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324134604315.76fdytdh6go0.png)
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230324134604315.76fdytdh6go0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230324134604315.76fdytdh6go0.png)
 
 ## 参考文档
 

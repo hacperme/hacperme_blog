@@ -31,7 +31,7 @@ searchHidden: true
 
 [![github](https://img.shields.io/badge/Github-ffffff.svg?&style=for-the-badge&logo=github&logoColor=black)](https://github.com/hacperme/)
 
-[![公众号](https://img.shields.io/badge/WeChat-ffffff.svg?&style=for-the-badge&logo=WeChat&logoColor=green)](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/qrcode_for_gh_b1444a13ac67_258.4g56jp6fs4y0.jpg)
+[![公众号](https://img.shields.io/badge/WeChat-ffffff.svg?&style=for-the-badge&logo=WeChat&logoColor=green)](https://github.com/hacperme/picx_hosting/raw/master/20210507/qrcode_for_gh_b1444a13ac67_258.4g56jp6fs4y0.jpg)
 
 
 

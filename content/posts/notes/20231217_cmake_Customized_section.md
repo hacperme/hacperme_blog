@@ -74,7 +74,7 @@ showbreadcrumbs: true #顶部显示当前路径
 ```
 
 旧的构建系统有将 flash_config.c.obj 的代码 flexspi_config 存储在 .flash_config 这个 section，而新的固件却没有，整个map文件都查不到 flexspi_config  的信息。根据 flash_config.c 的代码在这篇文章[痞子衡嵌入式：深扒i.MXRTxxx系列ROM中集成的串行NOR Flash启动SW Reset功能及其应用场合](https://www.cnblogs.com/henjay724/p/15085155.html)中找到 flexspi_config 的作用：flexspi_config 是固件镜像的启动头 FDCB，bootrom 用来给 FlexSPI 外设初始化 flash 用的。对比两个镜像文件也能看到差异，一个有 FDCB，一个没有。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.6so0kh3g44w0.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.6so0kh3g44w0.webp)
 
 那么 FDCB 是怎么生成的呢？
 

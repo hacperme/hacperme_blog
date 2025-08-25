@@ -30,15 +30,15 @@ showbreadcrumbs: true #顶部显示当前路径
 
 T32 加载 dump 之后看不到任务调用栈，是因为寄存器的值异常，导致任务调用栈没解析出来。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240731/image.7p3ib6p4y8.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240731/image.7p3ib6p4y8.webp)
 
 可以通过 tcb 中栈数据恢复寄存器的值：
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240731/image.3k7wz2uwfy.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240731/image.3k7wz2uwfy.webp)
 
 打开对应的 task struct，dump pxTopOfStack(0x411420) 指向的内存数据
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240731/image.4jo0c92xsd.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240731/image.4jo0c92xsd.webp)
 
 在pxTopOfStack(0x411420)的第8字节开始，对应寄存器 r1 ~ r15(pc)的值，分别将这些值设置到寄存器。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240731/image.73tuowfe49.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240731/image.73tuowfe49.webp)
 
 这样任务调用栈便恢复了，可以继续进行下一步的分析。

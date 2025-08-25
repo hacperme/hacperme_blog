@@ -80,4 +80,4 @@ iperf Done.
 ```
 
 然后实网测速结果：
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20241108/cdfaaa201d0d42722f2c9c3aa3ad254.6m3wz3nffy.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20241108/cdfaaa201d0d42722f2c9c3aa3ad254.6m3wz3nffy.webp)

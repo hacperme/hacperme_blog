@@ -89,7 +89,7 @@ D:/workspace/QT/qt_idf/examples/shell/cmds/cmds.c:54
 ```
 
 004EADA6 是 test_return1 中第 56 行代码位置，004EAFB0 是 test_return1 中第 54 行代码位置。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.2lbwjc2df7s0.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.2lbwjc2df7s0.webp)
 
 
 另外，使用 addr2line.exe 还碰到出现 dwarf error: could not find abbrev number 108. 问题，原因是编译的时候没有打开调试信息，在编译配置中增加 -g3 即可解决。

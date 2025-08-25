@@ -129,7 +129,7 @@ git-repo 是一个使用 go 编写的仓库管理工具，与原始 repo 相比�
 
   下载代码成功结果如下：
 
-  ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20211226/xxx.7dh4nlz4oew0.png)
+  ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20211226/xxx.7dh4nlz4oew0.png)
 
   创建新分支：git repo start --all new\_branch\_name
 

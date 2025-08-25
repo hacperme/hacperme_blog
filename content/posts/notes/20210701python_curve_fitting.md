@@ -33,15 +33,15 @@ showbreadcrumbs: true #顶部显示当前路径
 
 电位器实物图：
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/O1CN01NEpJek2FUvFJ3PlGL_!!116528884.20sqf6u1osbk.jpg)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/O1CN01NEpJek2FUvFJ3PlGL_!!116528884.20sqf6u1osbk.jpg)
 
 旋转编码器实物图：
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/O1CN01liE5Cs1aChBFtxQiv_!!738263294.5zkjz8b545k0.jpg)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/O1CN01liE5Cs1aChBFtxQiv_!!738263294.5zkjz8b545k0.jpg)
 
 在某项目中使用ADC+可调电位器的方式实现音量调节功能，电路如下图：
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210704192637951.5n9kcrmwis80.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210704192637951.5n9kcrmwis80.png)
 
 在使用ADC时发现一个问题，从ADC读取到的电压值并不是实际电压，从ADC读取的电压值范围是0\~184mv，测量得到的实际电压为0\~1668mv，所以需要对ADC的原始数据做处理，通过软件拟合得到真实电压。遇到问题，解决问题，学习使用python处理曲线拟合的几种方法。
 
@@ -55,7 +55,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 python对我来说是一门辅助性的工具，通常编写的代码量不大，jupyter lab 上可以运行代码，绘图显示方便，同时编写笔记，所以jupyter lab 非常适合我的使用需求，而不需要重量级的IDE开发环境。
 
-下面是一个来自jupyter lab官网的运行界面图，除了支持python，还支持c++、R、Julia等其他编程语言。![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/labpreview.3z2gylg3xyo0.png)
+下面是一个来自jupyter lab官网的运行界面图，除了支持python，还支持c++、R、Julia等其他编程语言。![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/labpreview.3z2gylg3xyo0.png)
 
 ## python 线性拟合方法
 
@@ -83,7 +83,7 @@ vo = [702, 1212, 1343, 1442, 1525, 1572, 1623, 1638, 1652, 1665, 1647,  1580, 15
 p = plt.plot(adc, vo, 'rx')
 ```
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210704224026426.19dc4mt6nx9c.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210704224026426.19dc4mt6nx9c.png)
 
 从上图看，原始数据和实际电压数据基本上保持线性关系，这是比较幸运的情况，从图上看应该是一条直线，通过直线拟合的方法来得到实际电压没有问题。
 
@@ -112,7 +112,7 @@ p = plt.plot(adc, f(adc))
 p = plt.plot(adc, vo, 'rx')
 ```
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210704231937480.2t6hteq3sxk0.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210704231937480.2t6hteq3sxk0.png)
 
 方法2，使用scipy提供的线性回归函数linregress求解
 
@@ -134,7 +134,7 @@ p = plt.plot(adc, vo, 'rx')
 p = plt.plot(adc, f(adc))
 ```
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210704234405650.6nac3we7czk0.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210704234405650.6nac3we7czk0.png)
 
 方法3，求最小二乘解
 
@@ -201,7 +201,7 @@ p = plt.plot(adc, vo, 'rx')
 p = plt.plot(adc, f(adc))
 ```
 
-![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210705002503294.iomg7llgank.png)
+![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210705002503294.iomg7llgank.png)
 
 ## 非线性拟合
 
@@ -230,7 +230,7 @@ p = plt.plot(adc, f(adc))
    a = plt.axis([-3 * np.pi, 3 * np.pi, -1.25, 1.25])
    ```
 
-   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210705011117201.2axjjtv371gk.png)
+   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210705011117201.2axjjtv371gk.png)
 
 2. 拟合自定义曲线
 
@@ -259,7 +259,7 @@ p = plt.plot(adc, f(adc))
    p = plt.plot(x, y_noisy, 'gx')
    ```
    
-   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210705012840461.2fgzrcl3wpc0.png)
+   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210705012840461.2fgzrcl3wpc0.png)
    
    使用curve_fit求解
    
@@ -273,7 +273,7 @@ p = plt.plot(adc, f(adc))
    p = plt.plot(x, function(x, *p_est), "r")
    ```
    
-   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/image-20210705012906846.5me94zsxt800.png)
+   ![](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/image-20210705012906846.5me94zsxt800.png)
    
    ## 参考资料
    

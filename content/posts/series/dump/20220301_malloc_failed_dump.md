@@ -38,14 +38,14 @@ Error description: (310,320,0),KIOSMEM,L:146
 
 (310,320,0),KIOSMEM,L:146 表示申请 0x320(800)字节大小的内存失败。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.71ra56f17sc.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.71ra56f17sc.png)
 
 通过工具 Quec_Crane_Dump_Memory_Parse_Tool_v1.1.2 解析dump查看内存使用情况，打开output_osa_mem.txt，查找 `free block` 关键字，发现确实没有0x320（800）大小的空闲内存了。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.5mk1a5n2q58.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.5mk1a5n2q58.png)
 
 最后检查应用代码，定位发生内存泄漏的地方。
 
 task QlUMaiRx 申请了365920字节，申请了10455次， 所以这里出问题的可能性最大，最后确定是串口接收回调 ql_uart_callback 内存泄漏。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.7c56drtmo4o0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.7c56drtmo4o0.png)

@@ -16,7 +16,7 @@ draft: false
 
 Windows 环境下，在官网 https://github.com/AGWA/git-crypt/releases 下载最新版本软件，然后将其所在路径添加到系统环境变量PATH
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230103232738007.32llslzam8c0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230103232738007.32llslzam8c0.png)
 
 打开git bash，输入 git crypt --version 验证安装情况:
 
@@ -319,5 +319,5 @@ git-crypt 0.7.0
 
    在仓库托管平台看不到明文内容，符合预期。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230104010811220.2jhfuv80z1y0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230104010811220.2jhfuv80z1y0.png)
 

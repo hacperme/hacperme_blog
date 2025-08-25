@@ -32,7 +32,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 出现死机问题的设备是展锐8910，打开Trace32软件，导入设备死机时的dump文件进行分析。如下图：
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled.6pc338h1s6c0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled.6pc338h1s6c0.png)
 
 先看死机时PC停止的位置，对应的汇编代码是 ldrb r2,[r1,#0x5]，结合trace32中寄存器的值来看，可以确定死机原因是访问非法内存， r1 寄存器为0，也就是访问0地址（空指针）导致死机。
 
@@ -130,13 +130,13 @@ v.v %s (char *)0x6032500C
 ```
 
 可以看到当前打开的文件是"UFS:/corget/config.txt"，打开方式为 "wb"。
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 1.78fnrbowyhs0.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 1.78fnrbowyhs0.png" >}}
 
 结合源码和调用栈来看，ql_fopen内部调用ql_file_is_opened(file_name = 0x80CD3614) 检查UFS:/corget/config.txt是否在已打开的文件列表内。
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 2.37ocqw9ddjg0.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 2.37ocqw9ddjg0.png" >}}
 
 然后ql_file_is_opened 内部会调用 ql_open_file_get_info 遍历打开的文件信息列表，查找文件是否已打开，从dump和源码可以知道，当前总共打开了8个文件，ql_file_is_opened 中 position = 7，也就是当前在获取最后一个文件的信息（从0开始，0~7）。
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 3.5l1t54o27l00.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 3.5l1t54o27l00.png" >}}
 
 最终在ql_open_file_get_info里访问了空指针死机，ql_open_file_get_info里面
 
@@ -144,7 +144,7 @@ v.v %s (char *)0x6032500C
 err = 0
 node = 0x0 -> NULL
 ```
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 4.14pnhuh5bcik.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 4.14pnhuh5bcik.png" >}}
 
 根据代码可以看到是ql_open_file_get_info里面memcpy(file_info, node→data, node→size)这里访问了空指针，可以结合dump和linklist的数据结构定义交叉验证: 
 
@@ -157,7 +157,7 @@ typedef struct node
 } linklist; // 9 bytes
 ```
 
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 5.2rjbg4i36ga0.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 5.2rjbg4i36ga0.png" >}}
 死机的汇编代码位置 ldrb r2,[r1,#0x5]，r1为0，偏移5个字节，刚好是memcpy(file_info, node→data, node→size)中的node→data。
 
 为什么ql_open_file_get_info里会访问空指针？其实是linklist_node_find 这个函数的bug，查看全局变量ql_file_open_list的值和linklist_node_find的源码，可以定位到问题的原因是linklist_node_find的代码逻辑问题，查找链表节点中遍历链表是从(*linklist_handler)->header->next;开始，忽略了第一个节点，如果当前查找的节点是链表的最后一个节点，就会返回空节点。
@@ -204,8 +204,8 @@ QuecOSStatus linklist_node_find(linklist_handler_t * linklist_handler, uint32_t 
 }
 ```
 
-{{< figure link="https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Untitled 6.6ei9ltmtxpo0.png" >}}
+{{< figure link="https://github.com/hacperme/picx_hosting/raw/master/20210507/Untitled 6.6ei9ltmtxpo0.png" >}}
 
 通过Trace32分析dump文件，定位到了出现问题的源码位置，这个死机问题基本上完成了追根溯源，那么对于如何解决这个问题，你有什么建议？欢迎讨论。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/qrcode_for_gh_b1444a13ac67_258.4g56jp6fs4y0.jpg)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/qrcode_for_gh_b1444a13ac67_258.4g56jp6fs4y0.jpg)

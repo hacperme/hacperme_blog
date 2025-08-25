@@ -40,7 +40,7 @@ AT指令响应+CSQ: 28,99 中的信号等级28表示 rssi -57dBm，其转换公�
 dBm = -113 + N * 2 (where N is the returned value)
 ```
 
-![csq_in_dBm](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting@master/20210507/csq_in_dBm.7aknpv7dfrk0.png)
+![csq_in_dBm](https://cdn.jsdelivr.net/gh/hacperme/picx_hosting/raw/master/20210507/csq_in_dBm.7aknpv7dfrk0.png)
 
 CSQ与dBm的对应关系如下表：
 

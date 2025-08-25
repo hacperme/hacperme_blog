@@ -28,23 +28,23 @@ showbreadcrumbs: true #顶部显示当前路径
 
 按照分区地址和大小，在烧录工具上配置各个分区文件地址和大小。
 
-![image-20240711101046365](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711101046365.1021tszend.webp)
+![image-20240711101046365](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711101046365.1021tszend.webp)
 
 
 按照标识顺序填写
 
-![image-20240711100453379](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711100453379.7i09n4at0w.webp)
+![image-20240711100453379](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711100453379.7i09n4at0w.webp)
 
 点读flash
 
-![image-20240711095336569](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711095336569.32huhuyrsd.webp)
+![image-20240711095336569](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711095336569.32huhuyrsd.webp)
 
 重启模组进下载模式
 
-![image-20240711095408918](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711095408918.7p3hijxxq5.webp)
+![image-20240711095408918](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711095408918.7p3hijxxq5.webp)
 
 然后导出完成
 
-![image-20240711100625169](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711100625169.5tqwpxmsjq.webp)
+![image-20240711100625169](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711100625169.5tqwpxmsjq.webp)
 
 也可以通过同样的方式配置来擦除、写入指定位置大小的数据。

@@ -38,7 +38,7 @@ tags:
 女书是一种神奇的文字，文字特点是笔画简洁，字体修长，结构匀称，呈菱形，观赏性强,它还是唯一一种分性别的文字，它传女不传男。  
 女书还是江永三千文化之一--千年女书，被赞誉为文化深山中的野玫瑰。
 
-![P51127-202555](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/P51127-202555.264qm3dth8n4.jpg)
+![P51127-202555](https://github.com/hacperme/picx_hosting/raw/master/20210507/P51127-202555.264qm3dth8n4.jpg)
 
 按照活动流程，到后面可以向欧小松校长提问，我当时准备的问题有两个，但是y有个被别人提了，所以又临时增加了一个问题，现在只是记得一些模糊的答案：
 
@@ -55,11 +55,11 @@ tags:
   
   > 女书最初只是用来情感交流，一种习俗。在主题，内容，形式上显得静态无生命力。
 
-![P51127-202734](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/P51127-202734.78z5mpowt1s0.jpg)
+![P51127-202734](https://github.com/hacperme/picx_hosting/raw/master/20210507/P51127-202734.78z5mpowt1s0.jpg)
 
 最后找校长要了个女书版的签名，还请教了自己的名字用女书怎么写。
 
 记得当时他说看到我有点眼熟，我说可能正好前段时间参加了思修的课程设计比赛，他当时是评委之一，哈哈。
 
-![IMG_20180723_163243-01](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/IMG_20180723_163243-01.4ur6dky0f6o0.jpg)
+![IMG_20180723_163243-01](https://github.com/hacperme/picx_hosting/raw/master/20210507/IMG_20180723_163243-01.4ur6dky0f6o0.jpg)
 

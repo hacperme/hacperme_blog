@@ -54,23 +54,23 @@ showbreadcrumbs: true #顶部显示当前路径
 
   在coolwatcher 工具里面选择tools->blue screen dump。
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.6kl1y8cbopo0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.6kl1y8cbopo0.png)
 
   elf 文件选择编译出来的 8915DM_cat1_open_core.elf，然后再选择dump的保存路径，点击start开始传输dump文件。
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.7ba9cp8hy100.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.7ba9cp8hy100.png)
 
 - Trace32 加载dump文件步骤
 
   解压压缩包T32.7z，把dump文件复制到8910dump目录下，同时需要复制编译固件的elf文件，同时放到8910dump目录下。
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.1beoxyunshvk.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.1beoxyunshvk.png)
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.68n5rt8flvc0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.68n5rt8flvc0.png)
 
   双击 T32_8910_Quectel_ap.bat 脚本进行解析
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.2gg1onaptj6s.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.2gg1onaptj6s.png)
 
   
 
@@ -87,11 +87,11 @@ showbreadcrumbs: true #顶部显示当前路径
 
 - 查看调用栈
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.6197iyj56dw0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.6197iyj56dw0.png)
 
 - 查看寄存器
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.5333jcu67bg0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.5333jcu67bg0.png)
 
   R15--PC,
 
@@ -105,39 +105,39 @@ showbreadcrumbs: true #顶部显示当前路径
 
   输入16进制内存地址
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.1b610cfkslcw.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.1b610cfkslcw.png)
 
   
 
 - 线程列表
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.43dqywq15fw0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.43dqywq15fw0.png)
 
   查看tcb
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.7bdb8l9q8vo0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.7bdb8l9q8vo0.png)
 
 - 查看变量
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.5jmpgb7kr3k0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.5jmpgb7kr3k0.png)
 
   使用命令 v.v 变量类型 变量地址
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.5xhx3po5k6o0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.5xhx3po5k6o0.png)
 
 - 通过设置断点，根据函数地址查找函数名字
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.6j2i6nh6ioo0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.6j2i6nh6ioo0.png)
 
   
 
 - 查看类型，数据结构定义
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.4h67d8yjesq0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.4h67d8yjesq0.png)
   
 - 查看代码
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3c77p6zotde0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3c77p6zotde0.png)
 
 ## 3. 典型问题分析方法
 
@@ -149,7 +149,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 示例如下图：
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.30mm21bknm60.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.30mm21bknm60.png)
 
  ldrb    r2,[r1,#0x5]  为死机的位置，ldrb 是ARM汇编中的一条内存寻址指令，作用是将从存储器中将一个``8``位的字节数据传送到目的寄存器中，同时将寄存器的高``24``位清零。
 
@@ -175,11 +175,11 @@ ldrb    r2,[r1,#0x5]  的意思是 将存储器地址为R1＋0x5的字节数据�
 
   这种类型的栈溢出判断比较简单，直接看Trace32的调用栈里面是否有vApplicationStackOverflowHook的调用；或者查看死机task的TCB，查看其栈的起始地址对应的内存数据，看填充的A5A5数据是不是被篡改了，如果不是A5A5，则可以断定是栈溢出了。
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.705487lxxtg0.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.705487lxxtg0.png)
 
   
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.1yppd8g70s9s.png)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.1yppd8g70s9s.png)
 
   局部变量溢出导致dump的判断方法：
 
@@ -191,13 +191,13 @@ ldrb    r2,[r1,#0x5]  的意思是 将存储器地址为R1＋0x5的字节数据�
 
 判断内存越界的方法，如果有导出heap report文件，可以先看下heap report里面有没有 block tail pattern error 的地方。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.19zvvjkrafuo.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.19zvvjkrafuo.png)
 
 如果没有heap report文件，则可以从dump解析里面去判断，具体方法如下：
 
 先看调用栈里面有没有prvFree.part.5的调用，如果有则有可能是检测到内存被破坏了。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.x7rh1xs5d5s.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.x7rh1xs5d5s.png)
 
 对于指定的内存地址，看有没有越界，还可以通过dump内存数据来判断，例如查看0x80BAEC90这个地址有没有被破坏：
 
@@ -209,7 +209,7 @@ v.v (struct osiBlockHeader *)(0x80BAEC90-8)
 
 注意对地址0x80BAEC90 向前偏移8个字节
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3whwy6coo960.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3whwy6coo960.png)
 
 我们可以得到几个信息：
 
@@ -219,7 +219,7 @@ size = 4,
 
 对caller = 806162601（十进制）乘以2，可以得到申请这段内存的函数地址，806162601*2=1612325202 （0x601A2152），通过设置断点的方式可以找到地址0x601A2152对应的函数是mlConvertStr。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.52wsocwbxq40.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.52wsocwbxq40.png)
 
 size = 4（十进制）乘以8，可以得到这段内存的大小，4*8=32 （0x20）
 
@@ -231,7 +231,7 @@ size = 4（十进制）乘以8，可以得到这段内存的大小，4*8=32 （0
 d.dump (0x80BAEC90-0x08+0x20-0x01)
 ```
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3vk1kk62we80.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3vk1kk62we80.png)
 
 看箭头所指的地方是否为fd。
 
@@ -239,21 +239,21 @@ tail的位置的计算方法，内存地址-0x08+内存大小-0x01
 
 上述dump内存的方法和导出的heap report是可以对应的上的：
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3xcjcommx8o0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3xcjcommx8o0.png)
 
 
 
 ​	取一个正常的内存地址做对比，以dump中的地址0x80BAEC28为例：
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.1xhhsmxcpeow.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.1xhhsmxcpeow.png)
 
 
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3yp6fparxdm0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3yp6fparxdm0.png)
 
 caller = 806521247,  806521247*2 = 1613042494（0x6025133E）
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.4ve7tv6clp80.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.4ve7tv6clp80.png)
 
 size = 13,  13*8=104 (0x68)
 
@@ -263,7 +263,7 @@ size = 13,  13*8=104 (0x68)
 d.dump (0x80BAEC28-0x08+0x68-0x01)
 ```
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.3pptmlkjmgo0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.3pptmlkjmgo0.png)
 
 内存的结构：
 
@@ -271,4 +271,4 @@ d.dump (0x80BAEC28-0x08+0x68-0x01)
  8字节header(包含caller，size等信息)+数据区(malloc返回的地址)+8字节对齐的冗余数据+1字节的尾部（其中最后一个字节为tail: FD）
 ```
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.4spx3x78qqe0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.4spx3x78qqe0.png)

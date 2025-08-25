@@ -50,7 +50,7 @@ ELF 格式可以表示 4 种类型的二进制文件。
 
 ELF 文件有两种视图，链接视图和执行视图。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.537j262ygd80.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.537j262ygd80.webp)
 
 - ELF Header, ELF头部，定义全局性信息
 - Program Header Table， 描述段(Segment)信息的数组，每个元素对应一个段；通常包含在可执行文件中，可重定文件中可选(通常不包含)
@@ -59,9 +59,9 @@ ELF 文件有两种视图，链接视图和执行视图。
 
 
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/Elf-layout--en.57iifa9anbs0.svg)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/Elf-layout--en.57iifa9anbs0.svg)
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.7g9d6hz09800.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.7g9d6hz09800.webp)
 
 ### ELF Header 数据结构
 
@@ -294,7 +294,7 @@ p_type 段的类型。
 
 p_flags 段权限。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.1h9i5z63s128.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.1h9i5z63s128.webp)
 
 p_offset 从文件开始到该段开头的第一个字节的偏移。
 
@@ -316,13 +316,13 @@ p_align 可加载的程序的段的 p_vaddr 以及 p_offset 的大小必须是 p
 
   代码段只包含只读的指令以及数据
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.6e9i5f08h340.webp)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.6e9i5f08h340.webp)
 
 - 数据段
 
   数据段包含可写的数据以及以及指令
 
-  ![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image.3y9bqzlxiig0.webp)
+  ![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image.3y9bqzlxiig0.webp)
 
   .bss 节的类型为 SHT_NOBITS，这表明它在 ELF 文件中不占用空间，但是它却占用可执行文件的内存镜像的空间。通常情况下，没有被初始化的数据在段的尾部，因此，`p_memsz` 才会比 `p_filesz` 大。
 

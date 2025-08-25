@@ -38,7 +38,7 @@ showbreadcrumbs: true #顶部显示当前路径
 
 gcc 工具链中的链接器有一个功能，配置加上 -Wl,--print-memory-usage，可以在链接之后输出内存使用情况。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image-20240711143848316.sytyorxq8.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image-20240711143848316.sytyorxq8.webp)
 
 heap 内存放在 ram 这块内存，在.data .bss段内存之后，根据代码使用情况动态调整大小。从 ld 文件和 heap_4.c 可以看到 _empty_ram 就是 heap 的起始地址，结束地址到 ram 的末尾。
 
@@ -378,7 +378,7 @@ size by section to outsect.csv ...
 ```
 
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240711/image.7ljvl4f6xi.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240711/image.7ljvl4f6xi.webp)
 
 
 

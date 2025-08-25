@@ -387,7 +387,7 @@ npx tailwindcss -i ./static/src/main.css -o ./static/dist/main.css --minify
 
 访问 http://127.0.0.1:5000/ 查看效果
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/screencapture-127-0-0-1-5000-2023-10-30-01_44_51.3zjpb5uqib40.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/screencapture-127-0-0-1-5000-2023-10-30-01_44_51.3zjpb5uqib40.webp)
 
 ## 资料
 

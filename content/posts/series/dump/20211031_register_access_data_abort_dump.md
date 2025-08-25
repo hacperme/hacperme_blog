@@ -51,7 +51,7 @@ FAULT_ADDRESS=0xD4280829
 
 任务调用栈信息，看调用栈，最后是在执行sdhci_dumpregs函数，data abort 的地址 0xD4280829。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.sn16avefy5c.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.sn16avefy5c.png)
 
 SDHC 寄存器基地址如下：
 
@@ -114,7 +114,7 @@ static void sdhci_dumpregs(UINT32 base)
 
 SDHCI_POWER_CONTROL 寄存器地址和描述如下：
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/xxx.75hikkip1jk0.png)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/xxx.75hikkip1jk0.png)
 
 0xD4280800 + 0x29 对应 对应图中标黄区域。
 

@@ -1909,7 +1909,7 @@ write_csv("malloc failed/heap_U.csv", header, data2)
 xQueueCreateMutex 出现的次数最多，xQueueCreateMutex 调用一次分配 104 内存，出现 428 次，也就使用了 40 多 k 的内存一直没释放。
 
 排查代码逻辑，在联网失败的时候进入错误处理，有个互斥锁创建了未销毁，导致内存泄漏。
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240729/image.51e1ygv6zq.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240729/image.51e1ygv6zq.webp)
 
 #### 小结
 

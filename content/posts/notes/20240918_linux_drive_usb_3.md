@@ -173,10 +173,10 @@ IAD1的bFirstInterface为0，bInterfaceCount为2；IAD2的bFirstInterface为2，
   除了设备的连接状态，在其他状态下，当USB总线持续3ms没有活动时，设备就会自动进入挂起状态。
 
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.pfb2n8fny.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240926/image.pfb2n8fny.webp)
 当设备状态变为配置状态时，即可认为USB设备和USB主机间的枚举完成。
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.ic37ai1rb.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240926/image.ic37ai1rb.webp)
 
 
 ## 枚举
@@ -202,6 +202,6 @@ IAD1的bFirstInterface为0，bInterfaceCount为2；IAD2的bFirstInterface为2，
   USB 设备收到 SetConfiguration（）请求后，会判断配置值是否合法。如果合法，设备就进入配置状态。设备会根据配置值选择对应的配置描述符，进行初始化操作，如初始化该配置中所有接口中所有的端点。初始化完成后，设备就具备与主机进行数据传输的能力，此时枚举阶段结束。
 
 
-![image](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.7sn6icos5v.webp)
+![image](https://github.com/hacperme/picx-images-hosting/raw/master/20240926/image.7sn6icos5v.webp)
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx-images-hosting@master/20240926/image.8l02032i9b.webp)
+![](https://github.com/hacperme/picx-images-hosting/raw/master/20240926/image.8l02032i9b.webp)

@@ -58,7 +58,7 @@ lock-free 中的所有结构都是基于数组的、有界的、无锁的，适�
 
 - 性能
 
-![](https://jsd.cdn.zzko.cn/gh/hacperme/picx_hosting@master/20210507/image-20230513094637948.20qv3ct73slc.webp)
+![](https://github.com/hacperme/picx_hosting/raw/master/20210507/image-20230513094637948.20qv3ct73slc.webp)
 
 看了这三个数据结构 lock-free 的实现，原理是使用了原子操作。
 

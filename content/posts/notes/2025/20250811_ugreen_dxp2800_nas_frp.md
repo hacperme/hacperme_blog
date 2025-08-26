@@ -53,7 +53,7 @@ auth.token = "12345678"
 
 ```
 
-注意需要设置 `webServer.addr = "0.0.0.0"`, 不然打不开web管理面板界面。auth.token 和 webServer.password 安卓实际需要修改成自己的。
+注意需要设置 `webServer.addr = "0.0.0.0"`, 不然打不开web管理面板界面。auth.token 和 webServer.password 按照实际需要修改成自己的。
 
 然后再创建 docker-compose.yaml 文件：
 

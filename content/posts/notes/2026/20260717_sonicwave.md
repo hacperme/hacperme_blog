@@ -1,7 +1,7 @@
 ---
 title: "Sonic Wave：一个纯浏览器端的音频转换与压缩工具"
 date: 2026-07-17T10:22:58+08:00
-lastmod: 2026-07-17T10:22:58+08:00
+lastmod: 2026-08-03T10:22:58+08:00
 author: ["hacper"]
 tags:
     - 音频
@@ -15,7 +15,7 @@ categories:
 description: "介绍 Sonic Wave 的设计思路、核心实现、部署方式和使用方法。"
 summary: "Sonic Wave 是我开发的一个纯浏览器端音频转换与压缩工具，支持多格式转换、批量处理与 Docker 部署，本文记录它的设计思路与使用方法。"
 slug: ""
-draft: true # 是否为草稿
+draft: false # 是否为草稿
 comments: true
 showToc: true # 显示目录
 TocOpen: true # 自动展开目录
@@ -246,7 +246,25 @@ Dockerfile 用的是**多阶段构建**：
 
 #### 方式一：Docker Compose
 
-在仓库目录执行：
+docker-compose.yml 文件：
+
+```yaml
+services:
+  sonic-wave:
+    image: hacper/sonic-wave:latest
+    ports:
+      - "18099:8089"
+    environment:
+      - PORT=8089
+      - STATIC_DIR=/app
+    volumes:
+      # 可选：挂载自定义配置文件
+      - ./config.toml:/app/config.toml:ro
+    restart: unless-stopped
+    container_name: sonic-wave
+```
+
+在根目录执行：
 
 ```bash
 docker-compose up -d

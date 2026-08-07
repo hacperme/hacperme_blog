@@ -15,7 +15,7 @@ categories:
 description: "商用工具链 license 绑定 MAC 地址时的通用解法：Docker 指定 MAC 或 WSL 新增 bond 网卡"
 summary: "FlexLM/FlexNet 类 license 绑定 MAC 时，用 Docker --mac-address 或 WSL bond 网卡指定 MAC 即可绕过主机绑定，通用且不污染宿主机网络。"
 slug: "mac-license-solution"
-draft: true
+draft: false
 comments: true
 showToc: true
 TocOpen: true

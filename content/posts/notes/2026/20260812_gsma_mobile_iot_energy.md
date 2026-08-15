@@ -26,10 +26,6 @@ searchHidden: false
 showbreadcrumbs: true
 ---
 
-# NB-IoT / LTE-M 低功耗方案设计实战
-
-> 基于 GSMA《Energy Efficiency for Mobile IoT》(2022.03) 白皮书整理。这份白皮书是 5G IoT Strategy Group（Sony/Sierra Wireless 主编，ublox/Huawei/Telefonica 等贡献）的实战经验总结，对做蜂窝物联网低功耗产品的工程师很有参考价值。
-
 做电池供电的蜂窝 IoT 产品（水表、追踪器、传感器节点），功耗设计绕不开 NB-IoT / LTE-M。这两个 LPWAN 技术相对 2G 的能效优势是**数量级**的，但优势要真正发挥出来，必须把 3GPP R13/R14 的节能特性用对——用错场景反而更耗电。
 
 ## 一、先看整体功耗模型
@@ -114,14 +110,8 @@ showbreadcrumbs: true
 
 ```
 UDP（Fire & Forget） → CoAP（UDP+ACK，小消息） → LwM2M（CoAP+设备管理）
-  → TCP/MQTT/HTTP（大消息分块确认，最耗）
+  → TCP/MQTT/HTTP（大消息分块确认）
 ```
-
-⚠️ **安全开销是隐藏的功耗杀手**：
-- TCP/TLS（证书握手让模块保持连接数秒）**远比 UDP/DTLS 耗能**
-- 用 **Session Resumption** 复用安全令牌，减少握手次数
-
-⚠️ **Chatty 应用陷阱**：服务器响应慢 → 设备滞留连接态或回落空闲再重连（更耗）。**优化云端响应时间是免费的功耗优化**。
 
 ## 六、典型用例参数（可直接参考）
 
@@ -153,7 +143,3 @@ UDP（Fire & Forget） → CoAP（UDP+ACK，小消息） → LwM2M（CoAP+设备
 | 成本 | 更低 | 中 |
 
 **一句话选型**：纯数据、低频上报、要跑几年的 → NB-IoT/LTE-M + PSM；要实时下行、语音、高速率的 → Cat.1。
-
----
-
-*参考：GSMA《Energy Efficiency for Mobile IoT》(2022.03) 白皮书全文见知识库「GSMA 移动物联网能效」页。*

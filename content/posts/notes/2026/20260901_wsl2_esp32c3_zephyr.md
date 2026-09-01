@@ -15,7 +15,7 @@ categories:
 description: "在 WSL2 中从零搭建 ESP32-C3（XIAO ESP32C3）Zephyr 开发环境：环境依赖、USB 设备直通、编译、烧录与串口监视的完整流程。"
 summary: "WSL2 + Zephyr + ESP32-C3 完整踩坑记录：apt 依赖、west 工具链、usbipd-win 共享 USB 到 WSL2、dialout 权限，以及 west build / flash / espressif monitor 三板斧。"
 slug: "wsl2-esp32c3-zephyr"
-draft: true
+draft: false
 comments: true
 showToc: true
 TocOpen: true
@@ -30,9 +30,9 @@ showbreadcrumbs: true
 
 ## 背景
 
-Zephyr 是一个面向资源受限设备的小型实时操作系统（RTOS），支持 500+ 开发板，包括乐鑫的 ESP32 系列。ESP32-C3 是乐鑫的 RISC-V 单核 Wi-Fi/BLE SoC（160MHz，4MB Flash），开发板用的是 Seeed XIAO ESP32C3（QFN32，自带 USB-Serial/JTAG，一根 Type-C 线就能烧录和看日志，非常方便）。
+Zephyr 是一个面向资源受限设备的小型实时操作系统（RTOS），支持 500+ 开发板，包括乐鑫的 ESP32 系列。ESP32-C3 是乐鑫的 RISC-V 单核 Wi-Fi/BLE SoC（160MHz，4MB Flash），开发板用的是 Seeed XIAO ESP32C3。
 
-开发环境放在 WSL2 里，好处是宿主机 Windows 干净，工具链都隔离在发行版里，出问题重装即可。Zephyr 官方对 Ubuntu 支持最好，下面以 Ubuntu（WSL2）为例。
+Zephyr 官方对 Ubuntu 支持最好，下面以 Ubuntu（WSL2）为例。
 
 ## 前置条件
 
@@ -162,14 +162,6 @@ esptool v5.3.1
 Successfully created ESP32-C3 image.
 ```
 
-编译时可能看到一条无害警告：
-
-```text
-warning: MCUBOOT_UPDATE_FOOTER_SIZE ... was assigned the value '0x30' but got the value ''
-```
-
-这是 sysbuild 默认带了 mcuboot，而 hello_world 没有启用 img_manager 导致 Kconfig 依赖未满足，不影响编译和运行，忽略即可。
-
 ## 6. 烧录
 
 ```bash
@@ -224,18 +216,6 @@ Hello World! xiao_esp32c3/esp32c3
    could not open port /dev/ttyACM0: Permission denied
    ```
    加入 dialout 组并重启 WSL：`sudo usermod -aG dialout $USER`。
-
-3. **烧录报错 "No such file or directory"（找不到串口）**
-   先 `ls /dev/ttyACM*` 确认设备在；如果插了多个开发板，可以指定设备：
-   ```bash
-   west flash --esp-device /dev/ttyACM1
-   ```
-
-4. **west update 慢或失败**
-   网络问题，挂代理或换镜像源；国内可考虑配置 `west config` 使用镜像仓库。
-
-5. **exit code 2 之类的中途编译失败**
-   大多是依赖没装全，回到第 1 步对照 `apt install` 清单补装，或 `pip install west` 后重跑 `west packages pip --install`。
 
 ## 参考
 
